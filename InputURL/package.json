@@ -1,0 +1,16 @@
+{
+  "name": "InputURL",
+  "version": "1.0.0",
+  "description": "takes URL of a content as input",
+  "author": "kamal",
+  "dependencies": {
+    "express": "latest",
+    "body-parser": "latest",
+    "mongoose": "latest"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "main": "server.js",
+  "license": "ISC"
+}
