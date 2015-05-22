@@ -1,9 +1,7 @@
 var mongoose = require('mongoose');
 
 var dbURI = 'mongodb://localhost/contentDB';
-mongoose.connect(dbURI, function() {
-	console.log('connected');
-});
+var connection = mongoose.createConnection(dbURI);
 
 var Schema = mongoose.Schema;
 var contentSchema = new Schema({
@@ -22,6 +20,6 @@ var contentSchema = new Schema({
 	updatedAt : { type:Date, default:Date.now }
 });
 
-var ContentModel = mongoose.model('ContentModel', contentSchema);
+var ContentModel = connection.model('ContentModel', contentSchema);
 
 module.exports = ContentModel;

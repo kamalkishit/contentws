@@ -18,27 +18,6 @@ app.controller('mainController', function($scope, $http, $sce) {
 		.error(function(err) {
 			console.log(err);
 		});
-
-	/*&$scope.getMore = function() {
-		$http.get('/api/contents')
-			.success(function(data) {
-				for (var i = 0; i < 10; i++) {
-					$scope.items.push(data[i]);
-				}
-			})
-			.error(function(err) {
-				console.log(err);
-			});
-	}*/
-/*
-	for (var i = 0; i < 10; i++) {
-			var obj = {};
-	obj.title = 'This Beautiful Video Captures The Strength Of A Mother With Disabled Children';
-	obj.description = 'Get ready for some serious tears.Get ready for some serious tearsGet ready for some serious tears.Get ready for some serious tearsGet ready for some serious tears.Get ready for some serious tearsGet ready for some serious tears.Get ready for some serious tearsGet ready for some serious tears.Get ready for some serious tearsGet ready for some serious tears.Get ready for some serious tearsGet ready for some serious tears.Get ready for some serious tears';
-	obj.url = $sce.trustAsResourceUrl('http://www.storypick.com/wp-content/uploads/2015/05/badassmom6.jpg');
-		obj.ind = i;
-		$scope.items.push(obj);
-	}*/
 });
 
 app.filter('trustUrl', function($sce) {
@@ -50,9 +29,10 @@ app.filter('trustUrl', function($sce) {
 app.controller('URLController', function($scope, $http, $window) {
 
 	$scope.categories = ['Education', 'Governance', 'Health', 'Humanity', 'Inspire', 'Law/Justice', 'Police'];
+	console.log('i m here');
 
 	$scope.submitContentURL = function() {
-		$http.post('/api/urls', { contentURL:$scope.contentURL, category:$scope.category })
+		$http.post('/api/urls', { contentURL:$scope.contentURL })
 			.then(function(response) {
 				$window.alert('successfully submitted URL');
 				$scope.contentURL = null;

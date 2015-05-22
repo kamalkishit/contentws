@@ -46,7 +46,7 @@ app.post('/api/urls', function(req, res) {
 			console.log('URL not parsed successfully');
 			console.log(err);
 
-			var content = new ContentModel({ contentURL:req.body.contentURL, category:req.body.category });
+			var content = new ContentModel({ contentURL:req.body.contentURL });
 
 			content.save(function(err) {
 				if (err) {
@@ -63,9 +63,15 @@ app.post('/api/urls', function(req, res) {
 			console.log(output);
 			console.log('URL parsed successfully');
 
-			var title = output.data.ogTitle ? output.data.ogTitle : '';
-			var imageUrl = output.data.ogImage.url ? output.data.ogImage.url : '';
-			var description = output.data.ogImage.description ? output.data.ogDescription : '';
+			if (output.data) {
+				var title = output.data.ogTitle ? output.data.ogTitle : '';				
+				var description = output.data.ogDescription ? output.data.ogDescription : '';
+				var imageUrl = '';
+
+				if (output.data.ogImage) {
+				 	imageUrl = output.data.ogImage.url ? output.data.ogImage.url : '';
+				}
+			}
 
 			var content = new ContentModel({ contentURL:req.body.contentURL, 
 				ogTitle:title, ogImage:imageUrl, ogDescription:description, isProcessed:true, category:req.body.category
