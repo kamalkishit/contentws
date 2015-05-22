@@ -1,4 +1,4 @@
-var app = angular.module('ContentWS', []);
+var app = angular.module('ContentWS', ['infinite-scroll']);
 
 app.controller('mainController', function($scope, $http, $sce) {
 
@@ -18,6 +18,18 @@ app.controller('mainController', function($scope, $http, $sce) {
 		.error(function(err) {
 			console.log(err);
 		});
+
+	/*&$scope.getMore = function() {
+		$http.get('/api/contents')
+			.success(function(data) {
+				for (var i = 0; i < 10; i++) {
+					$scope.items.push(data[i]);
+				}
+			})
+			.error(function(err) {
+				console.log(err);
+			});
+	}*/
 /*
 	for (var i = 0; i < 10; i++) {
 			var obj = {};
@@ -37,8 +49,10 @@ app.filter('trustUrl', function($sce) {
 
 app.controller('URLController', function($scope, $http, $window) {
 
+	$scope.categories = ['Education', 'Governance', 'Health', 'Humanity', 'Inspire', 'Law/Justice', 'Police'];
+
 	$scope.submitContentURL = function() {
-		$http.post('/api/urls', { contentURL:$scope.contentURL })
+		$http.post('/api/urls', { contentURL:$scope.contentURL, category:$scope.category })
 			.then(function(response) {
 				$window.alert('successfully submitted URL');
 				$scope.contentURL = null;
@@ -84,4 +98,17 @@ app.controller('contentsController', function($scope, $http) {
 		.error(function(data) {
 			console.log('Error:' + data);
 		});
+
+	$scope.getMore = function() {
+		console.log('i m here');
+		$http.get('/api/contents')
+			.success(function(data) {
+				for (var i = 0; i < data.length; i++) {
+					$scope.urls.push(data[i]);
+				}
+			})
+			.error(function(data) {
+				console.log('Error:' + err);
+			});
+	}	
 });

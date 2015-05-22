@@ -4,9 +4,10 @@
   "description": "takes URL of a content as input",
   "author": "kamal",
   "dependencies": {
-    "express": "latest",
     "body-parser": "latest",
-    "mongoose": "latest"
+    "express": "latest",
+    "mongoose": "latest",
+    "morgan": "^1.5.3"
   },
   "scripts": {
     "start": "node server.js"

@@ -38,13 +38,15 @@ app.post('/api/urls', function(req, res) {
 		}
 	});
 
+	console.log(req.body.contentURL);
+
 	// parsing URLs metadata using opengraph algorithm
 	openGraphScraper({ 'url':req.body.contentURL }, function(err, output) {
 		if (err) {
 			console.log('URL not parsed successfully');
 			console.log(err);
 
-			var content = new ContentModel({ contentURL:req.body.contentURL});
+			var content = new ContentModel({ contentURL:req.body.contentURL, category:req.body.category });
 
 			content.save(function(err) {
 				if (err) {
@@ -66,7 +68,7 @@ app.post('/api/urls', function(req, res) {
 			var description = output.data.ogImage.description ? output.data.ogDescription : '';
 
 			var content = new ContentModel({ contentURL:req.body.contentURL, 
-				ogTitle:title, ogImage:imageUrl, ogDescription:description, isProcessed:true
+				ogTitle:title, ogImage:imageUrl, ogDescription:description, isProcessed:true, category:req.body.category
 			});
 
 			content.save(function(err) {

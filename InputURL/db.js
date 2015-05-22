@@ -14,6 +14,7 @@ var contentSchema = new Schema({
 	ogImage : { type:String },									// OpenGraph tag
 	ogDescription : { type:String },							// OpenGraph tag
 	ogSiteName : { type:String },								// OpenGraph tag
+	category : { type:String },									// category of the content
 	isProcessed : { type:Boolean, default:false },				// set to true if you have scrapped the webpage
 	isParsed : { type:Boolean, default:false },					// set to true if able to parse 'title', 'description' and 'image' url from the page
 	isValid : { type:Boolean, default:true },					// set to false for soft delete from results
