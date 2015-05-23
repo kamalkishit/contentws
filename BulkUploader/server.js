@@ -4,9 +4,9 @@
 var fs = require('fs');
 var sleep = require('sleep');
 
-var URL = require('./db/URLSchema');
+var models = require('./db/models');
 
-var readableStream = fs.createReadStream('input2.txt');
+var readableStream = fs.createReadStream('input.txt');
 var data = '';
 
 readableStream.on('data', function(chunk) {
@@ -21,7 +21,7 @@ readableStream.on('end', function() {
 
 	for (var i = 0; i < lines.length; i++) {
 		if (lines[i]) {
-			url = new URL({ URL : lines[i] });
+			url = new models.URL({ URL : lines[i] });
 
 			url.save(function(err) {
 				if (err) {
@@ -41,41 +41,3 @@ readableStream.on('end', function() {
 	console.log('Success count:', successCount);
 	console.log('Failure count:', failureCount);
 });
-
-/*
-var fs = require('fs');
-var readline = require('readline');
-var Q = require('q');
-
-var URL = require('./db/URLSchema');
-
-var readStream = fs.createReadStream('input.txt');
-var errWriteStream = fs.createWriteStream('err.txt');
-var successWriteStream = fs.createWriteStream('success.txt');
-
-Q.nfcall(fs.readFile, 'input.txt', 'utf-8')
-	.then(function(data) {
-		console.log('success2');
-		//console.log('File has been read:', data);
-	})
-	.fail(function(err) {
-		console.log('Error received:', err);
-	})
-	.done();
-
-var rl = readline.createInterface({
-	input : readStream,
-	output : process.stdout
-});
-
-rl.on('line', function(line) {
-	url = new URL({ URL : line });
-
-	url.save(function(err) {
-		if (err) {
-			console.log(err);
-		} else {
-			console.log('success');
-		}
-	});
-});*/

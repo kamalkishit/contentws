@@ -7,7 +7,8 @@
     "body-parser": "latest",
     "express": "latest",
     "mongoose": "latest",
-    "morgan": "^1.5.3"
+    "morgan": "latest",
+    "open-graph-scraper": "latest"
   },
   "scripts": {
     "start": "node server.js"

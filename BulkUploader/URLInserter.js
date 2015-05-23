@@ -1,10 +1,10 @@
 var openGraphScraper = require('open-graph-scraper');
 var sleep = require('sleep');
-var URL = require('./db/URLSchema');
-var Content = require('./db/contentSchema');
+var models = require('./db/models');
+
 
 console.log('i m here');
-URL.find().where('isProcessed').equals(false).exec(function(err, dbResults) {
+models.URL.find().where('isProcessed').equals(false).exec(function(err, dbResults) {
 	if (err) {
 		console.log(err);
 	} else {
@@ -25,7 +25,7 @@ URL.find().where('isProcessed').equals(false).exec(function(err, dbResults) {
 					var description = data.data.ogImage.description ? data.data.ogDescription : '';
 
 					console.log();
-					var content = new Content({ contentURL:data.data.ogUrl, 
+					var content = new models.Content({ contentURL:data.data.ogUrl, 
 						ogTitle:title, ogImage:imageUrl, ogDescription:description, isProcessed:true
 					});
 
@@ -33,14 +33,16 @@ URL.find().where('isProcessed').equals(false).exec(function(err, dbResults) {
 						if (err) {
 							console.log(err);
 							console.log('contentsave:failure2');
-						} else {				
+						} else {		
 							console.log('contentsave:success2');
 						}
 					});
 				}
 			});
 
-			sleep.sleep(3);
+			sleep.sleep(5);
 		}
 	}
 });
+
+

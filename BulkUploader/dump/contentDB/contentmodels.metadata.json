@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":NumberInt(1),"key":{"_id":NumberInt(1)},"name":"_id_","ns":"contentDB.contentmodels"},{"v":NumberInt(1),"unique":true,"key":{"contentURL":NumberInt(1)},"name":"contentURL_1","ns":"contentDB.contentmodels","background":true,"safe":null}]}

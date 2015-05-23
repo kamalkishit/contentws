@@ -3,31 +3,33 @@ var bodyParser = require('body-parser');
 var fs = require('fs');
 var openGraphScraper = require('open-graph-scraper');
 var morgan = require('morgan');
-var ContentModel = require('./db');
+
+var models = require('./app/models/models');
 
 var app = express();
-app.use(morgan('dev'));
 
-app.use(express.static(__dirname));
+app.use(morgan('dev'));
+app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({ 'extended':'true' }));
 app.use(bodyParser.json());
 app.use(bodyParser.json({ type:'application/vnd.api+json' }));
 
+// get home page
 app.get('/', function(req, res) {
-	res.sendFile(__dirname + '/index.html');
+	res.sendFile(__dirname + '/public/index.html');
 });
 
-// return content submit page
+// get submit page
 app.get('/submit', function(req, res) {
-	res.sendFile(__dirname + '/submitContentURL.html');
+	res.sendFile(__dirname + '/public/submitContentURL.html');
 });
 
-// return contents page
+// get contents page
 app.get('/contents', function(req, res) {
-	res.sendFile(__dirname + '/contents.html');
+	res.sendFile(__dirname + '/public/contents.html');
 });
 
-// submit content URL
+// post content URL by user
 app.post('/api/urls', function(req, res) {
 
 	fs.appendFile('URL.txt', req.body.contentURL + '\n', function(err) {
@@ -39,6 +41,7 @@ app.post('/api/urls', function(req, res) {
 	});
 
 	console.log(req.body.contentURL);
+	console.log(req.body.category);
 
 	// parsing URLs metadata using opengraph algorithm
 	openGraphScraper({ 'url':req.body.contentURL }, function(err, output) {
@@ -46,7 +49,7 @@ app.post('/api/urls', function(req, res) {
 			console.log('URL not parsed successfully');
 			console.log(err);
 
-			var content = new ContentModel({ contentURL:req.body.contentURL });
+			var content = new models.Content({ contentURL:req.body.contentURL, category:$req.body.category });
 
 			content.save(function(err) {
 				if (err) {
@@ -73,7 +76,7 @@ app.post('/api/urls', function(req, res) {
 				}
 			}
 
-			var content = new ContentModel({ contentURL:req.body.contentURL, 
+			var content = new models.Content({ contentURL:req.body.contentURL, 
 				ogTitle:title, ogImage:imageUrl, ogDescription:description, isProcessed:true, category:req.body.category
 			});
 
@@ -94,8 +97,10 @@ app.post('/api/urls', function(req, res) {
 
 // get all the submitted contents
 app.get('/api/contents', function(req, res) {
-
-	ContentModel.find(function(err, contents) {
+	console.log('i m here');
+	console.log(req.query.limit);
+	console.log(req.query.offset);
+	models.Content.find().skip(req.params.offset).limit(req.params.limit).exec(function(err, contents) {
 		if (err) {
 			console.log('inside error:' + err);
 			res.send(err);
