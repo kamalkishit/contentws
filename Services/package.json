@@ -1,0 +1,7 @@
+{
+  "name": "temp",
+  "dependencies": {
+    "open-graph-scraper": "^1.0.1",
+    "q": "^1.4.1"
+  }
+}
