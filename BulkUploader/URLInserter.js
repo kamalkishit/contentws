@@ -18,7 +18,7 @@ models.URL.find().where('isProcessed').equals(false).exec(function(err, dbResult
 					console.log('ogs:failure');
 				} else {
 					console.log('ogs:success');
-
+/*
 					//console.log(data.data);
 					var title = data.data.ogTitle ? data.data.ogTitle : '';
 					var imageUrl = data.data.ogImage.url ? data.data.ogImage.url : '';
@@ -36,11 +36,11 @@ models.URL.find().where('isProcessed').equals(false).exec(function(err, dbResult
 						} else {		
 							console.log('contentsave:success2');
 						}
-					});
+					}); */
 				}
 			});
 
-			sleep.sleep(5);
+			//sleep.sleep(5);
 		}
 	}
 });

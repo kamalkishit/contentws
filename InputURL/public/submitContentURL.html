@@ -41,7 +41,12 @@
 				<br>
 				<br>
 
-				<button type='submit' class='btn btn-primary btn-lg' ng-click='submitContentURL()'>Add</button>
+				<span ng-show='pageError && contentURL && selectedCategory'>
+					Invalid URL inserted
+				</span>
+				<br>
+
+				<button type='submit' class='btn btn-primary btn-lg' ng-click='submitContentURL()' ng-disabled='!contentURL || !selectedCategory'>Add</button>
 			</form>
 
 		</div>

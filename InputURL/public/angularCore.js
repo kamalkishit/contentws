@@ -1,12 +1,12 @@
-var app = angular.module('ContentWS', []);
+var app = angular.module('ContentWS', ['infinite-scroll']);
+
+app.filter('trustUrl', function($sce) {
+	return function(url) {
+		return $sce.trustAsResourceUrl(url);
+	};
+});
 
 app.controller('mainController', function($scope, $http, $sce) {
-
-	$scope.title = 'This Beautiful Video Captures The Strength Of A Mother With Disabled Children';
-	$scope.description = 'Get ready for some serious tears.Get ready for some serious tears.Get ready for some serious tears.Get ready for some serious tears.Get ready for some serious tears.Get ready for some serious tears.Get ready for some serious tears.Get ready for some serious tears.';
-	$scope.url = 'http://www.youtube.com/embed/6rjRtn-2DQQ?feature=oembed&wmode=opaque&showinfo=0&showsearch=0&rel=0';
-
-	console.log($scope.url);
 
 	$scope.items = {};
 	$scope.offset = 0;
@@ -16,18 +16,38 @@ app.controller('mainController', function($scope, $http, $sce) {
 		.success(function(data) {
 			console.log(data);
 			$scope.items = data;
-			$scope.offset += 10;
+			$scope.offset += $scope.limit;
 		})
 		.error(function(err) {
 			console.log(err);
 		});
-});
 
-app.filter('trustUrl', function($sce) {
-	return function(url) {
-		return $sce.trustAsResourceUrl(url);
+	$scope.loadMore = function() {
+		console.log('loadmore');
+		$http.get('/api/contents', {params :{ offset:$scope.offset, limit:$scope.limit }})
+			.success(function(data) {
+				console.log(data);
+				$scope.items = data;
+				$scope.offset += 10;
+			})
+			.error(function(err) {
+				console.log(err);
+			});
+	};
+
+	$scope.search = function() {
+		$http.get('/api/search', { params :{ searchStr:$scope.searchStr, offset:0, limit:10 }})
+			.success(function(data) {
+				$scope.results = data;
+				console.log(data);
+			})
+			.error(function(data) {
+				console.log('error:' + err);
+			});
 	};
 });
+
+
 
 app.controller('URLController', function($scope, $http, $window) {
 
@@ -39,32 +59,26 @@ app.controller('URLController', function($scope, $http, $window) {
 		name : 'Health'
 	}, {
 		name : 'Humanity'
+	}, {
+		name : 'Inspirational'
 	}];
 
-	$scope.verifyURL = function() {
-		console.log('i m here');
-		$.ajax({
-			type : 'HEAD',
-			url : $scope.contentURL,
-			success : function() {
-				console.log('success');
-				$scope.isURLValid = true;
-			},
-			error : function() {
-				console.log('failure');
-				$scope.isURLValid = false;
-			}
-		});
-	};
+	$scope.pageError = false;
+
 	$scope.submitContentURL = function() {
+
 		console.log($scope.selectedCategory);
 		$http.post('/api/urls', { contentURL:$scope.contentURL, category:$scope.selectedCategory.name })
 			.then(function(response) {
 				$window.alert('successfully submitted URL');
-				$scope.contentURL = null;
+				$scope.pageError = false;
 			}, function(result) {
 				$window.alert('not able to submit URL');
+				$scope.pageError = true;
 			});
+
+		$scope.contentURL = null;
+		$scope.selectedCategory = null;
 	};
 });
 
@@ -121,14 +135,17 @@ app.controller('searchController', function($scope, $http){
 	$scope.offset = 0;
 	$scope.limit = 10;
 	
-	$http.get('/api/search', { params :{ searchStr:$scope.searchStr, offset:$scope.offset, limit:$scope.limit }})
-		.success(function(data) {
-			$scope.results = data;
-			offset += 10;
-			console.log(data);
-		})
-		.error(function(data) {
-			console.log('error:' + err);
-		});
+	
+	$scope.search = function() {
+		$http.get('/api/search', { params :{ searchStr:$scope.searchStr, offset:$scope.offset, limit:$scope.limit }})
+			.success(function(data) {
+				$scope.results = data;
+				offset += 10;
+				console.log(data);
+			})
+			.error(function(data) {
+				console.log('error:' + err);
+			});
+	};
 	
 });

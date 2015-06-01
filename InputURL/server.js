@@ -32,47 +32,28 @@ app.get('/contents', function(req, res) {
 // post content URL by user
 app.post('/api/urls', function(req, res) {
 
-	fs.appendFile('URL.txt', req.body.contentURL + '\n', function(err) {
-		if (err) {
-			console.log('write error');
-		} else {
-			console.log('write success');
-		}
-	});
-
 	console.log(req.body.contentURL);
 	console.log(req.body.category);
 
 	// parsing URLs metadata using opengraph algorithm
-	openGraphScraper({ 'url':req.body.contentURL }, function(err, output) {
+	openGraphScraper({ 'url':req.body.contentURL }, function(err, scrapedData) {
 		if (err) {
 			console.log('URL not parsed successfully');
 			console.log(err);
 
-			var content = new models.Content({ contentURL:req.body.contentURL, category:$req.body.category });
-
-			content.save(function(err) {
-				if (err) {
-					console.log('Error inserting content URL');
-					console.log(err);
-					res.status(400);
-					res.send(err);
-				} else {				
-					console.log('Successfully inserted URL:' + req.body.contentURL );
-					res.json(content);
-				}
-			});
+			res.status(400);
+			res.send(err);
 		} else {
-			console.log(output);
+			console.log(scrapedData);
 			console.log('URL parsed successfully');
 
-			if (output.data) {
-				var title = output.data.ogTitle ? output.data.ogTitle : '';				
-				var description = output.data.ogDescription ? output.data.ogDescription : '';
+			if (scrapedData.data) {
+				var title = scrapedData.data.ogTitle ? scrapedData.data.ogTitle : '';				
+				var description = scrapedData.data.ogDescription ? scrapedData.data.ogDescription : '';
 				var imageUrl = '';
 
-				if (output.data.ogImage) {
-				 	imageUrl = output.data.ogImage.url ? output.data.ogImage.url : '';
+				if (scrapedData.data.ogImage) {
+				 	imageUrl = scrapedData.data.ogImage.url ? scrapedData.data.ogImage.url : '';
 				}
 			}
 
@@ -100,12 +81,26 @@ app.get('/api/contents', function(req, res) {
 	console.log('i m here');
 	console.log(req.query.limit);
 	console.log(req.query.offset);
-	models.Content.find().skip(req.params.offset).limit(req.params.limit).exec(function(err, contents) {
+	models.Content.find().skip(req.query.offset).limit(req.query.limit).exec(function(err, contents) {
 		if (err) {
 			console.log('inside error:' + err);
 			res.send(err);
 		}
 
+		console.log(contents.length);
+		res.json(contents);
+	});
+});
+
+app.get('/api/search', function(req, res) {
+	console.log('inside search');
+	models.Content.search({ query : 'abc' }, function(err, contents) {
+		if (err) {
+			console.log('inside error:' + err);
+			res.send(err);
+		}
+
+		//console.log(contents.length);
 		res.json(contents);
 	});
 });
