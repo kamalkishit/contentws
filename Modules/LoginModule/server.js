@@ -5,8 +5,8 @@ var logger = require('./../../Common/Services/Logger');
 var dbSetupService = require('./../../Common/Services/DBSetupService');
 var config = require('./../../Common/Config/config');
 
-var loginService = require('./app/services/loginService');
-var signupService = require('./app/services/signupService');
+var loginService = require('./app/services/LoginService');
+var signupService = require('./app/services/SignUpService');
 
 var filename = 'server';
 
