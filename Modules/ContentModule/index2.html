@@ -7,16 +7,17 @@
 
 	<title>Content Worth Sharing</title>
 
+	<link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
 	<link href="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.4/angular-material.min.css" rel='stylesheet'>
     <link href="https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic" rel="stylesheet">		
 </head>
 <body ng-app='ContentModule' ng-controller='contentController'>
 
 		<div class='column'>
-			<div layout='column' flex=40 offset=60 ng-repeat='item in items'>
+			<div layout='column' flex='40' offset='60' ng-repeat='item in items'>
 				<md-card>
 						<md-card-content>
-							<a ng-href='{{ item.contentURL }}'><img ng-src='{{ item.ogImageURL | trustUrl }}' class='md-card-image' align='center'></a>
+							<a ng-href='{{ item.contentURL }}'><img ng-src='{{ item.ogImageURL | trustUrl }}' class='img-responsive' width=480 height=270></a>
 							<h3>{{ item.ogTitle }}</h3>
 							<hr>
 							<p>{{ item.ogDescription }}</p>
