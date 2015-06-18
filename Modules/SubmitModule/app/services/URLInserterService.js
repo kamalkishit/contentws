@@ -4,7 +4,7 @@ var databaseService = require('./../../../../Common/Services/DatabaseService');
 var uniqueIdGenerator = require('./../../../../Common/Services/UniqueIdGenerator');
 var logger = require('./../../../../Common/Services/Logger');
 
-var urlValidatorService = require('./UrlValidatorService');
+var urlValidatorService = require('./URLValidatorService');
 var scraperService = require('./ScraperService');
 var imageService = require('./ImageService');
 var contentCreationService = require('./ContentCreationService');

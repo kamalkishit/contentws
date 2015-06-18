@@ -1,6 +1,6 @@
 var shortId = require('shortid');
 
-var logger = require('./logger');
+var logger = require('./Logger');
 var filename = 'UniqueIdGenerator'
 
 exports.getUniqueId = function() {
