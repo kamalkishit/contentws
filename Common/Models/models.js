@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var mongoosastic = require('mongoosastic');
 
 var config = require('..//Config/config');
-var logger = require('./../services/Logger');
+var logger = require('./../Services/Logger');
 
 var filename = 'models';
 
