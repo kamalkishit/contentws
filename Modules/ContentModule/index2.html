@@ -13,20 +13,25 @@
 </head>
 <body ng-app='ContentModule' ng-controller='contentController'>
 
-		<div class='column'>
-			<div layout='column' flex='40' offset='60' ng-repeat='item in items'>
-				<md-card>
-						<md-card-content>
-							<a ng-href='{{ item.contentURL }}'><img ng-src='{{ item.ogImageURL | trustUrl }}' class='img-responsive' width=480 height=270></a>
-							<h3>{{ item.ogTitle }}</h3>
-							<hr>
-							<p>{{ item.ogDescription }}</p>
-						</md-card-content>
-						<div layout='row' align='center'>
-						<md-button class='md-raised'>Like</md-button>
-						<md-button class='md-raised'>Dislike</md-button>
-						</div>
-				</md-card>
+		<div layout='row' layout-wrap>
+			<div flex-gt-sm='40' offset-gt-sm='30'>
+				<div layout='column'>
+					<div  ng-repeat='item in items'>
+						<md-card>
+							<md-card-content>
+								<a ng-href='{{ item.contentURL }}'><img ng-src='{{ item.imageURL | trustUrl }}' class='img-responsive'></a>
+								<h3>{{ item.ogTitle }}</h3>
+								<hr>
+								<p>{{ item.ogDescription }}</p>
+							</md-card-content>
+							
+							<div layout='row' align='center'>
+								<md-button class='md-raised'>Like</md-button>
+								<md-button class='md-raised'>Dislike</md-button>
+							</div>
+						</md-card>
+					</div>
+				</div>
 			</div>
 		</div>
 

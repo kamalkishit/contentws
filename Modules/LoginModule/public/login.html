@@ -7,6 +7,8 @@
 	
 	<link href="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.4/angular-material.min.css" rel='stylesheet'>
     <link href="https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic" rel="stylesheet">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">    
+    <link href='./style.css' rel='stylesheet'>
 </head>
 <body ng-app='LoginModule' ng-controller='loginController'>
 
@@ -26,23 +28,26 @@
 						<h2 align='center'>Login</h2>
 						<md-input-container>
 							<label>Name</label>
-							<input type="text" ng-model="username" required md-maxlength="12" required>
+							<input type="text" ng-model="username" required md-maxlength="12" minlength='6' required>
 						</md-input-container>
 
 						<md-input-container>
 							<label>Password</label>
-							<input type="text" ng-model="password" required md-maxlength="12" required>
+							<input type="text" ng-model="password" required md-maxlength="12" minlength='6' required>
 						</md-input-container>
 
-						<div class='alert alert-danger' ng-if='error'>
+						<h3 ng-if='error' align='center'>
 							{{ error }}
-						</div>
+						</h3>
 
-						<div class='alert' ng-if='success'>
+						<h3 ng-if='success' align='center'>
 							{{ success }}
-						</div>
+						</h3>
 
-						<md-button class='md-raised' ng-disabled='!username || !password' ng-click='login()'>Login</md-button>
+						<md-button class='md-raised' ng-disabled='!username || !password' ng-click='login()'>
+							<span ng-if='!processing'>SignUp</span>
+							<span ng-if='processing' class='spinner'><i class="fa fa-repeat"></i></span>
+						</md-button>
 
 						<br>
 						<br>

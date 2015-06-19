@@ -1,4 +1,4 @@
-var app = angular.module('SubmitModule', []);
+var app = angular.module('SubmitModule', ['ngMaterial']);
 
 app.filter('trustUrl', function($sce) {
 	
@@ -25,38 +25,32 @@ app.factory('InsertService', function($http) {
 
 app.controller('submitController', function($scope, InsertService) {
 
-	$scope.categories = [{
-		name : 'Education'
-	}, {
-		name : 'Governance'
-	}, {
-		name : 'Health'
-	}, {
-		name : 'Humanity'
-	}, {
-		name : 'Inspirational'
-	}];
+	$scope.categories = [];
+	$scope.categories[0] = 'Education';
+	$scope.categories[1] = 'Health';
+	$scope.categories[2] = 'Humanity';
+	$scope.categories[3] = 'Governance';
 
 	$scope.processing = false;
 
 	$scope.insert = function() {
 
 		$scope.processing = true;
-		console.log('printing');
-		console.log($scope.contentURL);
+		$scope.success = null;
+		$scope.error = null;
 
-		InsertService.insert($scope.contentURL, $scope.selectedCategory.name)
+		InsertService.insert($scope.contentURL, $scope.selectedCategory)
 			.then(function(success) {
 				
-				console.log(success.status);
-				console.log(success.data);
+				$scope.success = success.data;
+				$scope.processing = false;
 			}, function(err) {
 				
-				console.log(err);
+				$scope.error = err;
+				$scope.processing = false;
 			});
 
-		$scope.processing = false;
 		$scope.contentURL = null;
-		$scope.selectedCategory = null;	
+		$scope.selectedCategory = null;			
 	};
 });
