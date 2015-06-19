@@ -5,7 +5,7 @@ var excelJsonService = require('./BulkUploaderService/app/services/ExcelJSONServ
 
 jobQueue.processJobs('abc')
 
-excelJsonService.excelToJson(__dirname + '/input.xlsx')
+excelJsonService.excelToJson(__dirname + '/input2.xls')
 	.then(function(jsonData) {
 
 		for (var i = 0; i < jsonData.length; i++) {
