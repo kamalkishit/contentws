@@ -5,16 +5,11 @@ var excelJsonService = require('./BulkUploaderService/app/services/ExcelJSONServ
 
 jobQueue.processJobs('abc')
 
-excelJsonService.excelToJson(__dirname + '/input.xlsx')
-	.then(function(jsonData) {
-
-		console.log(jsonData)
-/*
+fs.readFile(__dirname + '/input.txt', function(err, data) {
+    if (!err) {
+        jsonData = JSON.parse(data);
 		for (var i = 0; i < jsonData.length; i++) {
 			jobQueue.addJob('abc', jsonData[i].url, jsonData[i].category);
-		}*/
-
-	}, function(err) {
-
-		console.log(err);
-	});
+		}
+	}
+});

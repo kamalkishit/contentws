@@ -24,7 +24,7 @@ exports.like = function(userId, contentId) {
 			logger.error(filename, 'like:' + 'contentId is null');
 		}
 
-		databaseService.findOne(Like, { userid: userId, contentid: contentId})
+		databaseService.findOne(Like, { userId: userId, contentId: contentId })
 			.then(function(result) {
 					
 				logger.error(filename, 'like:' + 'already liked');
@@ -32,8 +32,8 @@ exports.like = function(userId, contentId) {
 			}, function(err) {
 
 				var like = new Like({
-					userid: userId,
-					contentid: contentId
+					userId: userId,
+					contentId: contentId
 				});
 
 				like.save(function(error) {
@@ -67,7 +67,7 @@ exports.unlike = function(userId, contentId) {
 			reject('contentId is null');
 		}
 
-		databaseService.findOne(Like, { userid: userId, contentid: contentId})
+		databaseService.findOne(Like, { userId: userId, contentId: contentId })
 			.then(function(result) {
 
 				result.remove(function(err) {
@@ -91,7 +91,125 @@ exports.unlike = function(userId, contentId) {
 	return promise;
 };
 
-exports.incrementLikeCount = function(contentId) {
+exports.dislikeLike = function(userId, contentId) {
+
+	var promise = new Promise(function(resolve, reject) {
+
+		if (!userId) {
+			logger.error(filename, 'dislikeLike:' + 'userId is null');
+			reject('userId is null');
+		}
+
+		if (!contentId) {
+			logger.error(filename, 'dislikeLike:' + 'contentId is null');
+			reject('contentId is null');
+		}
+
+		databaseService.findOne(Dislike, { userId: userId, contentId: contentId })
+			.then(function(result) {
+
+				result.remove(function(err) {
+
+					if (err) {
+						logger.error(filename, 'dislikeLike:' + err);
+						reject(new Error(err));					
+					} else {
+						redisService.hdel(userId + ':' + 'dislikes' , contentId);
+
+						databaseService.findOne(Like, { userId: userId, contentId: contentId })
+							.then(function(result) {
+
+							}, function(err) {
+
+								var like = new Like({
+									userId: userId,
+									contentId: contentId
+								});
+
+								like.save(function(error) {
+
+									if (error) {
+										logger.error(filename, 'dislikeLike:' + error);
+										reject(new Error(error));		
+									} else {
+										logger.info(filename, 'dislikeLike:' + 'successfully liked');
+										redisService.hset(userId + ':' + 'likes' , contentId, true);
+										resolve('successfully liked');
+									}
+								});
+							});
+					}
+				});
+			}, function(err) {
+
+				logger.error(filename, 'unlike:' + err);
+				reject('can not unlike as not a liked content');				
+			});
+	});
+
+	return promise;
+};
+
+exports.likeDislike = function(userId, contentId) {
+
+	var promise = new Promise(function(resolve, reject) {
+
+		if (!userId) {
+			logger.error(filename, 'likeDislike:' + 'userId is null');
+			reject('userId is null');
+		}
+
+		if (!contentId) {
+			logger.error(filename, 'likeDislike:' + 'contentId is null');
+			reject('contentId is null');
+		}
+
+		databaseService.findOne(Like, { userId: userId, contentId: contentId })
+			.then(function(result) {
+
+				result.remove(function(err) {
+
+					if (err) {
+						logger.error(filename, 'likeDislike:' + err);
+						reject(new Error(err));					
+					} else {
+						redisService.hdel(userId + ':' + 'likes' , contentId);
+
+						databaseService.findOne(Dislike, { userId: userId, contentId: contentId })
+							.then(function(result) {
+
+							}, function(err) {
+
+								var dislike = new Dislike({
+									userId: userId,
+									contentId: contentId
+								});
+
+								dislike.save(function(error) {
+
+									if (error) {
+										logger.error(filename, 'likeDislike:' + error);
+										reject(new Error(error));		
+									} else {
+										logger.info(filename, 'likeDislike:' + 'successfully liked');
+										redisService.hset(userId + ':' + 'dislikes' , contentId, true);
+										resolve('successfully disliked');
+									}
+								});
+							});
+					}
+				});
+			}, function(err) {
+
+				logger.error(filename, 'unlike:' + err);
+				reject('can not unlike as not a liked content');				
+			});
+	});
+
+	return promise;
+};
+
+var incrementLikeCount = function(contentId) {
 
 	var promise = new Promise(function(resolve, reject) {
 
@@ -112,9 +230,10 @@ exports.incrementLikeCount = function(contentId) {
 			});
 	});
 
+	return promise;
 };
 
-exports.decrementLikeCount = function(contentId) {
+var decrementLikeCount = function(contentId) {
 
 	var promise = new Promise(function(resolve, reject) {
 
@@ -152,7 +271,7 @@ exports.dislike = function(userId, contentId) {
 			reject('contentId is null');
 		}
 
-		databaseService.findOne(Dislike, { userid: userId, contentid: contentId})
+		databaseService.findOne(Dislike, { userId: userId, contentId: contentId })
 			.then(function(result) {
 
 				logger.error(filename, 'dislike:' + 'already disliked');
@@ -160,8 +279,8 @@ exports.dislike = function(userId, contentId) {
 			}, function(err) {
 
 				var dislike = new Dislike({
-					userid: userId,
-					contentid: contentId
+					userId: userId,
+					contentId: contentId
 				});
 
 				dislike.save(function(error) {
@@ -196,7 +315,7 @@ exports.undislike = function(userId, contentId) {
 			deferred.reject('contentId is null');
 		}
 
-		return databaseService.findOne(Dislike, { userid: userId, contentid: contentId})
+		return databaseService.findOne(Dislike, { userId: userId, contentId: contentId })
 			.then(function(result) {
 
 				result.remove(function(err) {
@@ -221,7 +340,7 @@ exports.undislike = function(userId, contentId) {
 	return promise;		
 };
 
-exports.incrementDislikeCount = function(contentId) {
+var incrementDislikeCount = function(contentId) {
 
 	var promise = new Promise(function(resolve, reject) {
 
@@ -245,7 +364,7 @@ exports.incrementDislikeCount = function(contentId) {
 	return promise;
 };
 
-exports.decrementDislikeCount = function(contentId) {
+var decrementDislikeCount = function(contentId) {
 
 	var promise = new Promise(function(resolve, reject) {
 

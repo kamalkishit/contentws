@@ -1,0 +1,30 @@
+{ [Error: Cannot find module '../build/Release/bson'] code: 'MODULE_NOT_FOUND' }
+js-bson: Failed to load c++ bson extension, using pure JS version
+{ [Error: Cannot find module '../build/Release/bson'] code: 'MODULE_NOT_FOUND' }
+js-bson: Failed to load c++ bson extension, using pure JS version
+{ [Error: Cannot find module '../build/Release/bson'] code: 'MODULE_NOT_FOUND' }
+js-bson: Failed to load c++ bson extension, using pure JS version
+{ [Error: Cannot find module '../build/Release/bson'] code: 'MODULE_NOT_FOUND' }
+js-bson: Failed to load c++ bson extension, using pure JS version
+server:: server started on 8888 successfully
+RedisService:: some error:Error: Redis connection to 127.0.0.1:6379 failed - connect ECONNREFUSED
+models:: createMapping:Error: No Living connections
+models:: setupConnection:MongoError: connect ECONNREFUSED
+RedisService:: some error:Error: Redis connection to 127.0.0.1:6379 failed - connect ECONNREFUSED
+RedisService:: some error:Error: Redis connection to 127.0.0.1:6379 failed - connect ECONNREFUSED
+RedisService:: some error:Error: Redis connection to 127.0.0.1:6379 failed - connect ECONNREFUSED
+RedisService:: some error:Error: Redis connection to 127.0.0.1:6379 failed - connect ECONNREFUSED
+RedisService:: some error:Error: Redis connection to 127.0.0.1:6379 failed - connect ECONNREFUSED
+RedisService:: some error:Error: Redis connection to 127.0.0.1:6379 failed - connect ECONNREFUSED
+RedisService:: some error:Error: Redis connection to 127.0.0.1:6379 failed - connect ECONNREFUSED
+RedisService:: some error:Error: Redis connection to 127.0.0.1:6379 failed - connect ECONNREFUSED
+RedisService:: some error:Error: Redis connection to 127.0.0.1:6379 failed - connect ECONNREFUSED
+RedisService:: some error:Error: Redis connection to 127.0.0.1:6379 failed - connect ECONNREFUSED
+RedisService:: some error:Error: Redis connection to 127.0.0.1:6379 failed - connect ECONNREFUSED
+RedisService:: some error:Error: Redis connection to 127.0.0.1:6379 failed - connect ECONNREFUSED
+RedisService:: some error:Error: Redis connection to 127.0.0.1:6379 failed - connect ECONNREFUSED
+RedisService:: some error:Error: Redis connection to 127.0.0.1:6379 failed - connect ECONNREFUSED
+RedisService:: some error:Error: Redis connection to 127.0.0.1:6379 failed - connect ECONNREFUSED
+RedisService:: some error:Error: Redis connection to 127.0.0.1:6379 failed - connect ECONNREFUSED
+RedisService:: some error:Error: Redis connection to 127.0.0.1:6379 failed - connect ECONNREFUSED
+RedisService:: some error:Error: Redis connection to 127.0.0.1:6379 failed - connect ECONNREFUSED

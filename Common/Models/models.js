@@ -28,13 +28,18 @@ exports.setupModels = function() {
 	});
 
 	var likeSchema = mongoose.Schema({
-		userid: { type:String, required:true },
-		contentid: { type:String, required: true }
+		userId: { type: String, required: true },
+		contentId: { type: String, required: true }
 	});
 
 	var dislikeSchema = mongoose.Schema({
-		userid: { type: String, required: true },
-		contentid: { type: String, required: true }
+		userId: { type: String, required: true },
+		contentId: { type: String, required: true }
+	});
+
+	var bookmarkSchema = mongoose.Schema({
+		userId: { type: String, required: true },
+		contentId: { type: String, required: true }
 	});
 
 	var contentSchema = new mongoose.Schema({
@@ -69,6 +74,7 @@ exports.setupModels = function() {
 	var User = mongoose.model('UserModel', userSchema);
 	var Like = mongoose.model('LikeModel', likeSchema);
 	var Dislike = mongoose.model('DislikeModel', dislikeSchema);
+	var Bookmark = mongoose.model('BookmarkModel', bookmarkSchema);
 
 	Content.createMapping(function(err, mapping) {
 
@@ -98,5 +104,10 @@ exports.getDislikeModel = function() {
 exports.getContentModel = function() {
 
 	return mongoose.model('ContentModel');
+};
+
+exports.getBookmarkModel = function() {
+
+	return mongoose.model('BookmarkModel');
 };
 

@@ -3,8 +3,12 @@
 var fs = require('fs');
 var request = require('request');
 var path = require('path');
+var gm = require('gm').subClass({ imageMagick: true });
 
 var logger = require('./../../../../Common/Services/Logger');
+
+var imageWidth = 480;
+var imageHeight = 270;
 
 var filename = 'ImageService';
 
@@ -35,6 +39,17 @@ exports.downloadImage = function(imageURI, imageFileName) {
 						logger.error(filename, 'downloadImage:' + err);
 						reject(new Error('not able to save file'));
 					} else {
+						gm(__dirname + '/../../public/static/images/' + imageFileName + path.extname(imageURI))
+							.resize(imageWidth, imageHeight, '!').write(imageFileName + path.extname(imageURI), 
+								function(err) { 
+
+									if (err) {
+										logger.error(filename, err);
+									} else {
+										logger.info(filename, 'successfully converted');
+									}
+								});
+							
 						logger.info(filename, 'downloadImage:' + 'file downloaded successfully');
 						resolve(new Error('file downloaded successfully'));
 					}

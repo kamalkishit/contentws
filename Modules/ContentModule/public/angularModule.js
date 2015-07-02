@@ -129,7 +129,7 @@ app.controller('findController', function($scope, FindService) {
 app.controller('contentController', function($scope, FindService, SearchService, LikeDislikeService) {
 
 	$scope.startIndex = 0;
-	$scope.limit = 10;
+	$scope.limit = 50;
 	$scope.items = [];
 
 	FindService.findAll($scope.startIndex, $scope.limit)

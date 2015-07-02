@@ -44,7 +44,7 @@ app.post('/login', function(req, res) {
 
 			logger.info(filename, 'POST /login:' + 'user logged in successfully');
 			res.status(config.httpSuccess);
-			res.send(success);
+			res.send({ "key": "value" });
 		}, function(err) {
 
 			logger.error(filename, 'POST /login:' + err);

@@ -21,17 +21,16 @@
     	</div>
 
 		<div layout='row'>
-			<md-card flex-gt-sm='60' offset-gt-sm='20'>					
+			<md-card flex-gt-sm='50' offset-gt-sm='25'>					
 				<md-card-content>
 					<a ng-href='{{ items[0].contentURL }}'><img ng-src='{{ items[0].imageURL | trustUrl }}' class='img-responsive'></a>
 					<h3>{{ items[0].ogTitle }}</h3>
-					<hr>
-					<p>{{ items[0].ogDescription }}</p>
 				</md-card-content>
 				
 				<div layout='row' align='center'>
 					<md-button class='md-raised'>Like</md-button>
 					<md-button class='md-raised'>Dislike</md-button>
+					<md-button class='md-raised'>Views</md-button>
 				</div>
 			</md-card>
 		</div>
@@ -39,18 +38,17 @@
 		<br>
 		<br>
 
-		<div layout='row' layout-wrap>
-			<md-card flex-gt-sm='35' offset-gt-sm='10' ng-repeat='item in items'>					
+		<div layout='row' flex-gt-sm='70' offset-gt-sm='15' layout-wrap>
+			<md-card flex-gt-sm='40' ng-repeat='item in items'>					
 				<md-card-content>
 					<a ng-href='{{ item.contentURL }}'><img ng-src='{{ item.imageURL | trustUrl }}' class='img-responsive'></a>
 					<h3>{{ item.ogTitle }}</h3>
-					<hr>
-					<p>{{ item.ogDescription }}</p>
 				</md-card-content>
 				
 				<div layout='row' align='center'>
 					<md-button class='md-raised'>Like</md-button>
 					<md-button class='md-raised'>Dislike</md-button>
+					<md-button class='md-raised'>Views</md-button>
 				</div>
 			</md-card>
 			<br>

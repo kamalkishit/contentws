@@ -5,6 +5,7 @@ var logger = require('./../../Common/Services/Logger');
 var config = require('./../../Common/Config/config');
 var apiService = require('./app/services/APIService');
 var likeDislikeService = require('./app/services/LikeDislikeService');
+var bookmarkService = require('./app/services/BookmarkService');
 
 var filename = 'server';
 
@@ -26,7 +27,8 @@ app.get('/contents', function(req, res) {
 
 			logger.info(filename, 'GET /contents:' + 'SUCCESS');
 			res.status(config.httpSuccess);
-			res.send(results);
+			//res.send("success");
+			res.send({"contents": results});
 		}, function(err) {
 
 			logger.error(filename, 'GET /contents:' + err);
@@ -37,7 +39,7 @@ app.get('/contents', function(req, res) {
 
 app.post('/like', function(req, res) {
 
-	likeDislikeService.like('abc', req.body.contentId)
+	likeDislikeService.like(req.body.userId, req.body.contentId)
 		.then(function(contents) {
 
 			logger.info(filename, 'POST /like:' + 'SUCCESS');
@@ -69,7 +71,7 @@ app.post('/like', function(req, res) {
 
 app.post('/unlike', function(req, res) {
 
-	likeDislikeService.unlike('abc', req.body.contentId)
+	likeDislikeService.unlike(req.body.userId, req.body.contentId)
 		.then(function(success) {
 
 			logger.info(filename, 'POST /unlike:' + 'SUCCESS');
@@ -83,9 +85,41 @@ app.post('/unlike', function(req, res) {
 		});
 });
 
+app.post('/likeDislike', function(req, res) {
+
+	likeDislikeService.likeDislike(req.body.userId, req.body.contentId)
+		.then(function(success) {
+
+			logger.info(filename, 'POST /likeDislike:' + 'SUCCESS');
+			res.status(config.httpSuccess);
+			res.send(success);
+		}, function(err) {
+
+			logger.info(filename, 'POST /likeDislike:' + err);
+			res.status(config.httpFailure);
+			res.send(err);
+		});
+});
+
+app.post('/dislikeLike', function(req, res) {
+
+	likeDislikeService.dislikeLike(req.body.userId, req.body.contentId)
+		.then(function(success) {
+
+			logger.info(filename, 'POST /dislikeLike:' + 'SUCCESS');
+			res.status(config.httpSuccess);
+			res.send(success);
+		}, function(err) {
+
+			logger.info(filename, 'POST /dislikeLike:' + err);
+			res.status(config.httpFailure);
+			res.send(err);
+		});
+});
+
 app.post('/dislike', function(req, res) {
 
-	likeDislikeService.dislike('abc', req.body.contentId)
+	likeDislikeService.dislike(req.body.userId, req.body.contentId)
 		.then(function(success) {
 
 			logger.info(filename, 'POST /dislike:' + 'SUCCESS');
@@ -101,7 +135,7 @@ app.post('/dislike', function(req, res) {
 
 app.post('/undislike', function(req, res) {
 
-	likeDislikeService.undislike('abc', req.body.contentId)
+	likeDislikeService.undislike(req.body.userId, req.body.contentId)
 		.then(function(success) {
 
 			logger.info(filename, 'POST /undislike:' + 'SUCCESS');
@@ -114,6 +148,38 @@ app.post('/undislike', function(req, res) {
 			res.send(err);
 		});
 });
+
+app.post('/bookmark', function(req, res) {
+
+	bookmarkService.bookmark(req.body.userId, req.body.contentId)
+		.then(function(success) {
+
+			logger.info(filename, 'POST /bookmark:' + 'SUCCESS');
+			res.status(config.httpSuccess);
+			res.send(success);
+		}, function(err) {
+
+			logger.error(filename, 'POST /bookmark:' + err);
+			res.status(config.httpFailure);
+			res.send(err);
+		});
+});
+
+app.post('/unbookmark', function(req, res) {
+
+	bookmarkService.unbookmark(req.body.userId, req.body.contentId)
+		.then(function(success) {
+
+			logger.info(filename, 'POST /unbookmark:' + 'SUCCESS');
+			res.status(config.httpSuccess);
+			res.send(success);
+		}, function(err) {
+
+			logger.error(filename, 'POST /unbookmark:' + err);
+			res.status(config.httpFailure);
+			res.send(err);
+		});
+})
 
 app.listen(8888, function() {
 

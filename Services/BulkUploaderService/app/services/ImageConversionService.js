@@ -30,7 +30,7 @@ exports.getImageSize = function(imageFileName) {
 	return promise;
 };
 
-exports.resizeImage(imageFileName) {
+exports.resizeImage = function(imageFileName) {
 
 	var promise = new Promise(function(resolve, reject) {
 
@@ -39,7 +39,7 @@ exports.resizeImage(imageFileName) {
 			reject(new Error('imageFileName is null'));
 		}
 
-		gm(imageFileName).resize(function(imageWidth, imageHeight, '!').write(imageFileName, function(err) {
+		gm(imageFileName).resize(imageWidth, imageHeight, '!').write(imageFileName, function(err) {
 
 			if (err) {
 				logger.error(filename, 'resizeImage:' + err);

@@ -28,12 +28,12 @@
 						<h2 align='center'>SignUp</h2>
 						<md-input-container>
 							<label>Name</label>
-							<input type="text" ng-model="username" required minlength='6' md-maxlength='12' required>
+							<input type="email" ng-model="username" required minlength='6' md-maxlength='50' required>
 						</md-input-container>
 
 						<md-input-container>
 							<label>Password</label>
-							<input type="text" ng-model="password" required minlength='6' md-maxlength='12' required>
+							<input type="password" ng-model="password" required minlength='6' md-maxlength='12' required>
 						</md-input-container>
 
 						<h3 ng-if='error' align='center'>
