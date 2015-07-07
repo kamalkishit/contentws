@@ -131,7 +131,7 @@ app.controller('findController', function($scope, FindService) {
 app.controller('contentController', function($scope, $window, FindService, SearchService, LikeDislikeService) {
 
 	$scope.startIndex = 0;
-	$scope.limit = 50;
+	$scope.limit = 10;
 	$scope.items = [];
 
 	if ($window.sessionStorage.getItem('token') != null) {
@@ -165,11 +165,6 @@ app.controller('contentController', function($scope, $window, FindService, Searc
 				console.log(records);
 				//$scope.items = records.data.contents;
 
-				for (var i = 0; i < records.data.contents.length; i++) {
-					records.data.contents[i].isLiked = false;
-					records.data.contents[i].isDisliked = false;
-					records.data.contents[i].isBookmarked = false;
-				}
 				//$scope.items = records.data.contents;
 				console.log(records.data.contents);
 				$scope.startIndex += $scope.limit;
@@ -184,11 +179,13 @@ app.controller('contentController', function($scope, $window, FindService, Searc
 		FindService.findAll($scope.startIndex, $scope.limit)
 			.then(function(records) {
 
+				console.log('inside loadmore');
 				console.log('orig length:' + $scope.items.length);
-				console.log('new reords length:' + records.length);
-				for (var i = 0; i < records.data.length; i++) {
-					$scope.items.push(records.data[i]);
+				console.log('new reords length:' + records.data.contents.length);
+				for (var i = 0; i < records.data.contents.length; i++) {
+					$scope.items.push(records.data.contents[i]);
 				}
+				console.log('updated length:' + $scope.items.length)
 
 				$scope.startIndex += $scope.limit;
 				console.log($scope.items.length);
