@@ -63,9 +63,7 @@ exports.setupModels = function() {
 		isParsed : { type:Boolean, default:false },					// set to true if able to parse 'title', 'description' and 'image' url from the page
 		isValid : { type:Boolean, default:true },					// set to false for soft delete from results
 		createdAt : { type:Date, default:Date.now },	
-		updatedAt : { type:Date, default:Date.now },
-		isLiked: { type: Boolean, default: false},
-		isDisliked: { type: Boolean, default: false}
+		updatedAt : { type:Date, default:Date.now }
 	});
 
 	contentSchema.plugin(mongoosastic);

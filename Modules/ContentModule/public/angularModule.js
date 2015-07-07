@@ -43,20 +43,22 @@ app.factory('LikeDislikeService', function($http) {
 
 	var likeDislikeService = {};
 
-	likeDislikeService.like = function(contentId) {
+	likeDislikeService.like = function(userId, contentId) {
 
 		console.log(contentId);
 
 		return $http.post('/like', {
+			userId: userId,
 			contentId: contentId
 		});
 	};
 
-	likeDislikeService.unlike = function(contentId) {
+	likeDislikeService.unlike = function(userId, contentId) {
 
 		console.log(contentId);
 
 		return $http.post('/unlike', {
+			userId: userId,
 			contentId: contentId
 		});
 	};	
@@ -104,7 +106,7 @@ app.controller('findController', function($scope, FindService) {
 			
 			console.log(records);
 			console.log(records.status)
-			$scope.items = records.data;
+			$scope.items = records.data.contents;
 			$scope.startIndex += $scope.limit;
 		}, function(err) {
 			
@@ -117,7 +119,7 @@ app.controller('findController', function($scope, FindService) {
 			.then(function(records) {
 				
 				console.log(records);
-				$scope.items = records.data;
+				$scope.items = records.data.contents;
 				$scope.startIndex += limit;
 			}, function(err) {
 				
@@ -136,8 +138,13 @@ app.controller('contentController', function($scope, FindService, SearchService,
 		.then(function(records) {
 			
 			console.log(records);
-			console.log(records.status)
-			$scope.items = records.data;
+			console.log(records.status);
+			for (var i = 0; i < records.data.contents.length; i++) {
+					records.data.contents[i].isLiked = false;
+					records.data.contents[i].isDisliked = false;
+					records.data.contents[i].isBookmarked = false;
+				}
+			$scope.items = records.data.contents;
 			$scope.startIndex += $scope.limit;
 		}, function(err) {
 			
@@ -150,7 +157,15 @@ app.controller('contentController', function($scope, FindService, SearchService,
 			.then(function(records) {
 
 				console.log(records);
-				$scope.items = records.data;
+				//$scope.items = records.data.contents;
+
+				for (var i = 0; i < records.data.contents.length; i++) {
+					records.data.contents[i].isLiked = false;
+					records.data.contents[i].isDisliked = false;
+					records.data.contents[i].isBookmarked = false;
+				}
+				//$scope.items = records.data.contents;
+				console.log(records.data.contents);
 				$scope.startIndex += limit;
 			}, function(err) {
 				
@@ -194,7 +209,7 @@ app.controller('contentController', function($scope, FindService, SearchService,
 	$scope.like = function(item) {
 
 		if (item.isLiked) {
-			LikeDislikeService.unlike(item.contentId)
+			LikeDislikeService.unlike('kamal', item.contentId)
 				.then(function(success)  {
 
 					console.log('unliked successfully');
@@ -204,7 +219,7 @@ app.controller('contentController', function($scope, FindService, SearchService,
 					console.log(err);
 				});			
 		} else {
-			LikeDislikeService.like(item.contentId)
+			LikeDislikeService.like('kamal', item.contentId)
 				.then(function(success)  {
 
 					console.log('liked successfully');

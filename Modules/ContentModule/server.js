@@ -6,6 +6,7 @@ var config = require('./../../Common/Config/config');
 var apiService = require('./app/services/APIService');
 var likeDislikeService = require('./app/services/LikeDislikeService');
 var bookmarkService = require('./app/services/BookmarkService');
+var userDataService = require('./../../Common/Services/UserDataService');
 
 var filename = 'server';
 
@@ -27,8 +28,14 @@ app.get('/contents', function(req, res) {
 
 			logger.info(filename, 'GET /contents:' + 'SUCCESS');
 			res.status(config.httpSuccess);
+			/*userService.getLikesData('kamal')
+				.then(function(keys) {
+					console.log('i m here');
+					console.log(keys);
+				}); */
 			//res.send("success");
-			res.send({"contents": results});
+			console.log(config.CONTENTS);
+			res.send({ "contents": results });
 		}, function(err) {
 
 			logger.error(filename, 'GET /contents:' + err);
@@ -179,7 +186,71 @@ app.post('/unbookmark', function(req, res) {
 			res.status(config.httpFailure);
 			res.send(err);
 		});
-})
+});
+
+app.get('/likes', function(req, res) {
+
+	userDataService.likes(req.query.userId)
+		.then(function(likes) {
+
+			logger.info(filename, 'GET /likes:' + 'SUCCESS');
+			res.status(config.httpSuccess);
+			res.send({ "likes": likes});
+		}, function(err) {
+
+			logger.error(filename, 'GET /likes:' + err);
+			res.status(config.httpFailure);
+			res.send(err);
+		});
+});
+
+app.get('/dislikes', function(req, res) {
+
+	userDataService.dislikes(req.query.userId)
+		.then(function(dislikes) {
+
+			logger.info(filename, 'GET /dislikes:' + 'SUCCESS');
+			res.status(config.httpSuccess);
+			res.send(dislikes);
+		}, function(err) {
+
+			logger.error(filename, 'GET /dislikes:' + err);
+			res.status(config.httpFailure);
+			res.send(err);
+		});
+});
+
+app.get('/bookmarks', function(req, res) {
+
+	userDataService.bookmarks(req.query.userId)
+		.then(function(bookmarks) {
+
+			logger.info(filename, 'GET /bookmarks:' + 'SUCCESS');
+			res.status(config.httpSuccess);
+			res.send(dislikes);
+		}, function(err) {
+
+			logger.error(filename, 'GET /bookmarks:' + err);
+			res.status(config.httpFailure);
+			res.send(err);
+		});
+});
+
+app.get('/userdata', function(req, res) {
+
+	userDataService.getUserData(req.query.userId)
+		.then(function(userdata) {
+
+			logger.info(filename, 'GET /userdata:' + 'SUCCESS');
+			res.status(config.httpSuccess);
+			res.send({ "userdata": userdata });
+		}, function(err) {
+
+			logger.error(filename, 'GET /userdata:' + err);
+			res.status(config.httpFailure);
+			res.send(err);
+		});
+});
 
 app.listen(8888, function() {
 

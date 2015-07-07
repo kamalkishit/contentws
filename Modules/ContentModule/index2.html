@@ -28,9 +28,10 @@
 				</md-card-content>
 				
 				<div layout='row' align='center'>
-					<md-button class='md-raised'>Like</md-button>
-					<md-button class='md-raised'>Dislike</md-button>
+					<md-button class='md-raised' ng-click='like(items[0])'>Like</md-button>
+					<md-button class='md-raised' ng-click='dislike(items[0])'>Dislike</md-button>
 					<md-button class='md-raised'>Views</md-button>
+					<md-button class='md-raised' ng-click='bookmark(items[0])'>Bookmark</md-button>
 				</div>
 			</md-card>
 		</div>
@@ -46,9 +47,10 @@
 				</md-card-content>
 				
 				<div layout='row' align='center'>
-					<md-button class='md-raised'>Like</md-button>
-					<md-button class='md-raised'>Dislike</md-button>
+					<md-button class='md-raised' ng-click='like(item)'>Like</md-button>
+					<md-button class='md-raised' ng-click='dislike(item)'>Dislike</md-button>
 					<md-button class='md-raised'>Views</md-button>
+					<md-button class='md-raised' ng-click='bookmark(item)'>Bookmark</md-button>
 				</div>
 			</md-card>
 			<br>

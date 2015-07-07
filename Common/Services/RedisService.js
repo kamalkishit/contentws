@@ -39,3 +39,40 @@ exports.hget = function(hashKey, key) {
 
 	return promise;
 };
+
+exports.hkeys = function(hashKey) {
+
+	var promise = new Promise(function(resolve, reject) {
+
+		client.hkeys(hashKey, function(err, keys) {
+
+			if (err) {
+				logger.error(filename, 'hkeys:' + hashKey + ',' + err);
+				reject(new Error(err));
+			} else {
+				logger.info(filename, 'hkeys:' + hashKey + ',', keys);
+				resolve(keys);
+			}
+		});
+	});
+
+	return promise;
+};
+
+exports.hgetall = function(hashKey) {
+
+	var promise = new Promise(function(resolve, reject) {
+		client.hgetall(hashKey, function(err, result) {
+			if (err) {
+				reject(new Error(err));
+			} else {
+				if (result == null) {
+					result = {}; // making json compatible
+				}
+				resolve(result);
+			}
+		});
+	});
+
+	return promise;
+};

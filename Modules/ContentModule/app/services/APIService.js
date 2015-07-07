@@ -22,9 +22,9 @@ exports.find = function(startIndex, limit) {
 					reject(new Error(err));
 				} else {
 					logger.info(filename, 'find:' + 'success');
-
+/*
 					for (var i = 0; i < contents.length; i++) {
-						redisService.hget('abc' + ':' + 'likes' , contents[i].contentId)
+						redisService.hget('kamal' + ':' + 'likes' , contents[i].contentId)
 							.then(function(success) {
 
 								console.log(success);
@@ -32,14 +32,14 @@ exports.find = function(startIndex, limit) {
 							});
 
 
-						redisService.hget('abc' + ':' + 'dislikes' , contents[i].contentId)
+						redisService.hget('kamal' + ':' + 'dislikes' , contents[i].contentId)
 							.then(function(success) {
 
 								contents[i].isDisliked = success;
 							});				
 					}
 
-					console.log(contents);
+					console.log(contents);*/
 					resolve(contents);
 				}
 			});
