@@ -30,7 +30,7 @@ app.post('/login', function(req, res) {
 	if (!req.body.username) {
 		res.status(config.httpFailure);
 		logger.error(filename, 'POST /login:' + 'username is missing');
-		res.send('username is missing');
+		res.send({ 'error': 'username is missing' });
 	}
 
 	if (!req.body.password) {
@@ -44,7 +44,7 @@ app.post('/login', function(req, res) {
 
 			logger.info(filename, 'POST /login:' + 'user logged in successfully');
 			res.status(config.httpSuccess);
-			res.send({ "key": "value" });
+			res.send(success);
 		}, function(err) {
 
 			logger.error(filename, 'POST /login:' + err);
@@ -86,7 +86,7 @@ app.post('/signup', function(req, res) {
 		});
 });
 
-app.listen(8888, function() {
+app.listen(8889, function() {
 
 	logger.info(filename, 'server started on 8888 successfully');
 });

@@ -1,8 +1,10 @@
 'use strict';
 
+var jsonWebToken = require('jsonwebtoken');
 var databaseService = require('./../../../../Common/Services/DatabaseService');
 var logger = require('./../../../../Common/Services/Logger');
 var models = require('./../../../../Common/Models/models');
+var config = require('./../../../../Common/Config/config');
 
 var filename = 'LoginService';
 
@@ -26,8 +28,12 @@ exports.login = function(username, password) {
 			.then(function(user) {
 
 				if (user.password == password) {
+					var token = jsonWebToken.sign(user, config.secretKey, {
+          				expiresInMinutes: 1440 // expires in 24 hours
+        			});
 					logger.info(filename, 'login:' + 'User validated');
-					resolve('User validated');
+					resolve({ 'userId': user.userId,
+							  'token': token });
 				} else {
 					logger.error(filename, 'login:' + 'password is invalid');
 					reject(new Error('password is invalid'));

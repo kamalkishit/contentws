@@ -47,7 +47,7 @@ app.controller('signupController', function($scope, $http, SignUpService) {
 	};
 });
 
-app.controller('loginController', function($scope, $http, $location, LoginService) {
+app.controller('loginController', function($scope, $http, $location, $window, LoginService) {
 
 	$scope.processing = false;
 
@@ -58,6 +58,38 @@ app.controller('loginController', function($scope, $http, $location, LoginServic
 		$scope.success = null;
 		$http.post('/login', { username: $scope.username, password: $scope.password })
 			.then(function(response) {
+				$window.localStorage.setItem('userId', response.data.userId);
+				$window.sessionStorage.setItem('token', response.data.token);
+				var p = $window.sessionStorage.getItem('token');
+				if (p == null) {
+					console.log('success');
+				} else {
+					console.log(p)
+				}
+				$scope.success = response.data;
+				$scope.processing = false;
+			}, function(err) {
+				$scope.error = err;
+				$scope.processing = false;
+			});
+
+		$scope.username = null;
+		$scope.password = null;	
+	};
+});
+
+app.controller('logoutController', function($scope, $http, $location, $window, LoginService) {
+
+	$scope.processing = false;
+
+	$scope.logout = function() {
+
+		$scope.processing = true;
+		$scope.error = null;
+		$scope.success = null;
+		$http.post('/login', { username: $scope.username, password: $scope.password })
+			.then(function(response) {
+				$window.localStorage.setItem('userId', response.data.userId);
 				$scope.success = response.data;
 				$scope.processing = false;
 			}, function(err) {

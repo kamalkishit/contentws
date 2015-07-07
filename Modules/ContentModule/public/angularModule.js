@@ -1,4 +1,4 @@
-var app = angular.module('ContentModule', ['ngMaterial']);
+var app = angular.module('ContentModule', ['ngMaterial', 'infinite-scroll']);
 
 app.filter('trustUrl', function($sce) {
 	
@@ -128,11 +128,17 @@ app.controller('findController', function($scope, FindService) {
 	};
 });
 
-app.controller('contentController', function($scope, FindService, SearchService, LikeDislikeService) {
+app.controller('contentController', function($scope, $window, FindService, SearchService, LikeDislikeService) {
 
 	$scope.startIndex = 0;
 	$scope.limit = 50;
 	$scope.items = [];
+
+	if ($window.sessionStorage.getItem('token') != null) {
+		$scope.isLoggedIn = true;
+	} else {
+		$scope.isLoggedIn = false;
+	}
 
 	FindService.findAll($scope.startIndex, $scope.limit)
 		.then(function(records) {
@@ -166,7 +172,7 @@ app.controller('contentController', function($scope, FindService, SearchService,
 				}
 				//$scope.items = records.data.contents;
 				console.log(records.data.contents);
-				$scope.startIndex += limit;
+				$scope.startIndex += $scope.limit;
 			}, function(err) {
 				
 				console.log(err);
