@@ -8,6 +8,64 @@ app.filter('trustUrl', function($sce) {
 	};
 });
 
+app.factory('UserDataService', function($http) {
+
+	var userDataService = {};
+	var userData = {};
+	var likes = {};
+	var dislikes = {};
+	var bookmarks = {};
+	var isDone = false;
+
+	userDataService.getUserData = function(userId) {
+
+		$http.get('/userdata', { params: { userId: userId }})
+			.then(function(userdata) {
+				userData = userdata.data.userdata;
+				console.log(userData);
+				likes = userData.likes;
+				dislikes = userData.dislikes;
+				bookmarks = userData.bookmarks;
+				isDone = true;
+			}, function(err) {
+				console.log(err);
+			})
+	};
+
+	userDataService.completed = function() {
+		return isDone;
+	}
+
+	userDataService.isLiked = function(contentId) {
+
+		if (likes[contentId]) {
+			return likes[contentId];
+		} else {
+			return false;
+		}
+	};
+
+	userDataService.isDisliked = function(contentId) {
+
+		if (dislikes[contentId]) {
+			return dislikes[contentId];
+		} else {
+			return false;
+		}
+	};
+
+	userDataService.isBookmarked = function(contentId) {
+
+		if (bookmarks[contentId]) {
+			return bookmarks[contentId];
+		} else {
+			return false;
+		}
+	};
+
+	return userDataService;
+})
+
 app.factory('SearchService', function($http) {
 
 	var searchService = {};
@@ -29,8 +87,6 @@ app.factory('FindService', function($http) {
 
 	findService.findAll = function(startIndex, limit) {
 
-		console.log(startIndex);
-
 		return $http.get('/contents', {
 			params: { startIndex: startIndex, limit: limit }
 		});
@@ -39,42 +95,92 @@ app.factory('FindService', function($http) {
 	return findService;
 });
 
-app.factory('LikeDislikeService', function($http) {
+app.factory('BookmarkService', function($http, UserDataService) {
+
+	var bookmarkService = {};
+
+	bookmarkService.bookmark = function(userId, content) {
+
+		if (content.isBookmarked) {
+			content.isBookmarked = false;
+			content.bookmarks -= 1;
+			return $http.post('/unbookmark', {
+				userId: userId,
+				contentId: content.contentId
+			});
+		} else {
+			content.isBookmarked = true;
+			content.bookmarks += 1;
+
+			return $http.post('/bookmark', {
+				userId: userId,
+				contentId: content.contentId
+			});
+		}
+	};
+
+	return bookmarkService;
+});
+
+app.factory('LikeDislikeService', function($http, UserDataService) {
 
 	var likeDislikeService = {};
 
-	likeDislikeService.like = function(userId, contentId) {
+	likeDislikeService.like = function(userId, content) {
 
-		console.log(contentId);
-
-		return $http.post('/like', {
-			userId: userId,
-			contentId: contentId
-		});
+		if (content.isLiked) {
+			content.isLiked = false;
+			content.likes -= 1;
+			// update local
+			return $http.post('/unlike', {
+				userId: userId,
+				contentId: content.contentId
+			});
+		} else if (content.isDisliked) {
+			content.isDisliked = false;
+			content.dislikes -= 1;
+			content.isLiked = true;
+			content.likes += 1;
+			return $http.post('/dislikeLike', {
+				userId: userId,
+				contentId: content.contentId
+			});
+		} else {
+			content.isLiked = true;
+			content.likes += 1;
+			return $http.post('/like', {
+				userId: userId,
+				contentId: content.contentId
+			});
+		}
 	};
 
-	likeDislikeService.unlike = function(userId, contentId) {
+	likeDislikeService.dislike = function(userId, content) {
 
-		console.log(contentId);
-
-		return $http.post('/unlike', {
-			userId: userId,
-			contentId: contentId
-		});
-	};	
-
-	likeDislikeService.dislike = function(contentId) {
-
-		return $http.post('/dislike', {
-			contentId: contentId
-		});
-	};
-
-	likeDislikeService.undislike = function(contentId) {
-
-		return $http.post('/undislike', {
-			contentId: contentId
-		});
+		if (content.isDisliked) {
+			content.isDisliked = false;
+			content.dislikes -= 1;
+			return $http.post('/dislike', {
+				userId: userId,
+				contentId: content.contentId
+			});
+		} else if (content.isLiked) {
+			content.isLiked = false;
+			content.likes -= 1;
+			content.isDisliked = true;
+			content.dislikes += 1;
+			return $http.post('/likeDislike', {
+				userId: userId,
+				contentId: content.contentId
+			});
+		} else {
+			content.isDisliked = true;
+			content.dislikes += 1;
+			return $http.post('/dislike', {
+				userId: userId,
+				contentId: content.contentId
+			});
+		}
 	};	
 
 	return likeDislikeService;
@@ -87,11 +193,9 @@ app.controller('searchController', function($scope, SearchService) {
 		console.log($scope.searchStr);
 		SearchService.search($scope.searchStr)
 			.then(function(success) {
-				
-				console.log(success);
+
 			}, function(err) {
-				
-				console.log(err)
+
 			});
 	};	
 });
@@ -103,36 +207,34 @@ app.controller('findController', function($scope, FindService) {
 
 	FindService.findAll($scope.startIndex, $scope.limit)
 		.then(function(records) {
-			
-			console.log(records);
-			console.log(records.status)
+
 			$scope.items = records.data.contents;
 			$scope.startIndex += $scope.limit;
 		}, function(err) {
-			
-			console.log(err);
+	
 		});
 
 	$scope.findAll = function() {
 
 		FindService.findAll($scope.startIndex, $scope.limit)
 			.then(function(records) {
-				
-				console.log(records);
+
 				$scope.items = records.data.contents;
 				$scope.startIndex += limit;
 			}, function(err) {
-				
-				console.log(err);
+
 			});
 	};
 });
 
-app.controller('contentController', function($scope, $window, FindService, SearchService, LikeDislikeService) {
+app.controller('contentController', 
+	function($scope, $window, FindService, SearchService, LikeDislikeService, BookmarkService, UserDataService) {
 
 	$scope.startIndex = 0;
 	$scope.limit = 10;
 	$scope.items = [];
+
+	UserDataService.getUserData("kamal");
 
 	if ($window.sessionStorage.getItem('token') != null) {
 		$scope.isLoggedIn = true;
@@ -140,21 +242,24 @@ app.controller('contentController', function($scope, $window, FindService, Searc
 		$scope.isLoggedIn = false;
 	}
 
+	$scope.isLoggedIn = true;
+
 	FindService.findAll($scope.startIndex, $scope.limit)
 		.then(function(records) {
-			
-			console.log(records);
-			console.log(records.status);
-			for (var i = 0; i < records.data.contents.length; i++) {
-					records.data.contents[i].isLiked = false;
-					records.data.contents[i].isDisliked = false;
-					records.data.contents[i].isBookmarked = false;
+
+			var contents = records.data.contents;
+			console.log(contents);
+
+			for (var i = 0; i < contents.length; i++) {
+					contents[i].isLiked = UserDataService.isLiked(contents[i].contentId);
+					contents[i].isDisliked = UserDataService.isDisliked(contents[i].contentId);
+					contents[i].isBookmarked = UserDataService.isBookmarked(contents[i].contentId);
 				}
-			$scope.items = records.data.contents;
+			$scope.items = contents;
+			console.log(contents);
 			$scope.startIndex += $scope.limit;
 		}, function(err) {
-			
-			console.log(err);
+
 		});
 
 	$scope.findAll = function() {
@@ -162,15 +267,11 @@ app.controller('contentController', function($scope, $window, FindService, Searc
 		FindService.findAll($scope.startIndex, $scope.limit)
 			.then(function(records) {
 
-				console.log(records);
-				//$scope.items = records.data.contents;
 
-				//$scope.items = records.data.contents;
-				console.log(records.data.contents);
 				$scope.startIndex += $scope.limit;
 			}, function(err) {
 				
-				console.log(err);
+
 			});
 	};
 
@@ -179,20 +280,15 @@ app.controller('contentController', function($scope, $window, FindService, Searc
 		FindService.findAll($scope.startIndex, $scope.limit)
 			.then(function(records) {
 
-				console.log('inside loadmore');
-				console.log('orig length:' + $scope.items.length);
-				console.log('new reords length:' + records.data.contents.length);
 				for (var i = 0; i < records.data.contents.length; i++) {
 					$scope.items.push(records.data.contents[i]);
 				}
-				console.log('updated length:' + $scope.items.length)
+
 
 				$scope.startIndex += $scope.limit;
-				console.log($scope.items.length);
-				console.log($scope.items);
+
 			}, function(err) {
 
-				console.log(err);
 			});
 	};
 
@@ -200,8 +296,7 @@ app.controller('contentController', function($scope, $window, FindService, Searc
 		console.log($scope.searchStr);
 		SearchService.search($scope.searchStr)
 			.then(function(searchResults) {
-				
-				console.log(searchResults.data);
+
 				$scope.items = searchResults.data;
 			}, function(err) {
 				
@@ -210,52 +305,18 @@ app.controller('contentController', function($scope, $window, FindService, Searc
 	};
 
 	$scope.like = function(item) {
-
-		if (item.isLiked) {
-			LikeDislikeService.unlike('kamal', item.contentId)
-				.then(function(success)  {
-
-					console.log('unliked successfully');
-					item.isLiked = !item.isLiked;
-				}, function(err) {
-
-					console.log(err);
-				});			
-		} else {
-			LikeDislikeService.like('kamal', item.contentId)
-				.then(function(success)  {
-
-					console.log('liked successfully');
-					item.isLiked = !item.isLiked;
-				}, function(err) {
-
-					console.log(err);
-				});
-		}
+		LikeDislikeService.like('kamal', item);
 	};
 
 	$scope.dislike = function(item) {
-
-		if (item.isDisliked) {
-			LikeDislikeService.undislike(item.contentId)
-				.then(function(success)  {
-
-					console.log('undisliked successfully');
-					item.isDisliked = !item.isDisliked;
-				}, function(err) {
-
-					console.log(err);
-				});
-		} else {
-			LikeDislikeService.dislike(item.contentId)
-				.then(function(success)  {
-
-					console.log('disliked successfully');
-					item.isDisliked = !item.isDisliked;
-				}, function(err) {
-
-					console.log(err);
-				});
-		}
+		LikeDislikeService.dislike('kamal', item);
 	};
+
+	$scope.bookmark = function(item) {
+		BookmarkService.bookmark('kamal', item);
+	}
+
+	$scope.updateViewCount = function(item) {
+		$http.post('/');
+	}
 });

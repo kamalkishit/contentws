@@ -64,7 +64,7 @@
 		<div class='row'>
 			<div class='col-sm-8 col-sm-offset-2 text-center'>
 				<md-card>
-					<a ng-href='{{ items[0].contentURL }}'><img ng-src='{{ items[0].ogImageURL | trustUrl }}' class='img-responsive' width=720 height=405></a>
+					<a ng-href='{{ items[0].contentURL }}'><img ng-src='{{ items[0].ogImageURL | trustUrl }}' class='img-responsive' width=720 height=405  target="_blank"></a>
 					 <md-card-content>
 				<h3>{{ items[0].ogTitle }}</h3>
 				<hr>
@@ -80,7 +80,7 @@
 			<div ng-repeat='item in items'>
 				<div class='col-sm-6 card'>
 					<md-card>
-						<a ng-href='{{ item.contentURL }}'><img ng-src='{{ item.ogImageURL | trustUrl }}' class='img-responsive' width=480 height=200></a>
+						<a ng-href='{{ item.contentURL }}'><img ng-src='{{ item.ogImageURL | trustUrl }}' class='img-responsive' width=480 height=270  target="_blank"></a>
 						<md-card-content>
 							<h3>{{ item.ogTitle }}</h3>
 							<hr>

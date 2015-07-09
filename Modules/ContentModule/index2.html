@@ -9,7 +9,15 @@
 
 	<link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
 	<link href="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.4/angular-material.min.css" rel='stylesheet'>
-    <link href="https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic" rel="stylesheet">		
+    <link href="https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic" rel="stylesheet">
+    <style>
+    	.green {
+    		background-color: green;
+		}
+		.red {
+			background-color: red;
+		}
+	</style>
 </head>
 <body ng-app='ContentModule' ng-controller='contentController'>
 
@@ -23,19 +31,19 @@
 		<div layout='row'>
 			<md-card flex-gt-sm='50' offset-gt-sm='25'>					
 				<md-card-content>
-					<a ng-href='{{ items[0].contentURL }}'><img ng-src='{{ items[0].ogImageURL | trustUrl }}' class='img-responsive'></a>
+					<a ng-href='{{ items[0].contentURL }}' target="_blank"><img ng-src='{{ items[0].imageURL | trustUrl }}' class='img-responsive'></a>
 					<h3>{{ items[0].ogTitle }}</h3>
 				</md-card-content>
 				
-				<div layout='row' align='center' ng-if='isLoggedIn'>
-					<md-button class="md-icon-button" ng-click='like(items[0])'>
+				<div layout='row' align='center' ng-if='isLoggedIn' aria-label='abc'>
+					<md-button class="md-icon-button" ng-click='like(items[0])' aria-label='abc'>
 				      <md-icon md-svg-src="thumbs-up.svg"></md-icon>
 				    </md-button>
 				    <!-- mini-FAB -->
-				    <md-button class="md-icon-button" ng-click='dislike(items[0])'>
+				    <md-button class="md-icon-button" ng-click='dislike(items[0])' aria-label='abc'>
 				      <md-icon md-svg-icon="thumbs-down.svg"></md-icon>
 				    </md-button>
-				    <md-button class="md-icon-button" ng-click='bookmarkd(items[0])'>
+				    <md-button class="md-icon-button" ng-click='bookmark(items[0])' aria-label='abc'>
 				      <md-icon md-svg-icon="bookmark.svg"></md-icon>
 				    </md-button>
 					<md-button class='md-raised'>Views</md-button>
@@ -49,19 +57,19 @@
 		<div layout='row' flex-gt-sm='70' offset-gt-sm='15' infinite-scroll='loadMore()' infinite-scroll-distance='1' layout-wrap>
 			<md-card flex-gt-sm='40' ng-repeat='item in items'>					
 				<md-card-content>
-					<a ng-href='{{ item.contentURL }}'><img ng-src='{{ item.ogImageURL | trustUrl }}' class='img-responsive'></a>
+					<a ng-href='{{ item.contentURL }}' target="_blank"><img ng-src='{{ item.imageURL | trustUrl }}' class='img-responsive'></a>
 					<h3>{{ item.ogTitle }}</h3>
 				</md-card-content>
 				
 				<div layout='row' align='center' ng-if='isLoggedIn'>
-				<md-button class="md-icon-button" ng-click='like(item)'>
-				      <md-icon md-svg-src="thumbs-up.svg"></md-icon>
+				<md-button class="md-icon-button" ng-click='like(item)' ng-class="{ green: item.isLiked}" aria-label='abc'>
+				      <md-icon md-svg-src="thumbs-up.svg" aria-label='abc'></md-icon>
 				    </md-button>
 				    <!-- mini-FAB -->
-				    <md-button class="md-icon-button" ng-click='dislike(item)'>
+				    <md-button class="md-icon-button" ng-click='dislike(item)' ng-class="{ red: item.isDisliked}" aria-label='abc'>
 				      <md-icon md-svg-icon="thumbs-down.svg"></md-icon>
 				    </md-button>
-				    <md-button class="md-icon-button" ng-click='bookmarkd(item)'>
+				    <md-button class="md-icon-button" ng-click='bookmark(item)' ng-class="{ green: item.isBookmarked}" aria-label='abc'>
 				      <md-icon md-svg-icon="bookmark.svg"></md-icon>
 				    </md-button>
 					<md-button class='md-raised'>Views</md-button>

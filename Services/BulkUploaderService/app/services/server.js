@@ -1,7 +1,10 @@
 
+var imageConversion = require('./ImageConversionService.js');
 
-var dbSetupService = require('./../../../../Common/Services/DBSetupService');
-var jobQueue = require('./JobQueue');
-
-jobQueue.addJob('abc', 'http://google.com', 'edu')
-jobQueue.processJobs('abc');
+imageConversion.resizeImage('/Users/Kamal/Desktop/E1cjj6S_.jpg')
+imageConversion.getImageSize('/Users/Kamal/Desktop/E1cjj6S_.jpg')
+	.then(function(success) {
+		console.log(success);
+	}, function(err) {
+		console.log(err);
+	})
