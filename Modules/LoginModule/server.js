@@ -2,6 +2,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 
 var logger = require('./../../Common/Services/Logger');
+var config = require('./../../Common/Config/config');
 var dbSetupService = require('./../../Common/Services/DBSetupService');
 var config = require('./../../Common/Config/config');
 
@@ -86,7 +87,7 @@ app.post('/signup', function(req, res) {
 		});
 });
 
-app.listen(8889, function() {
+app.listen(config.dbPort, function() {
 
 	logger.info(filename, 'server started on 8888 successfully');
 });

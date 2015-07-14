@@ -5,16 +5,13 @@ var logger = require('./../../../../Common/Services/Logger');
 var filename = 'ExcelJsonService';
 
 exports.excelToJson = function(excelFileName) {
-
 	var promise = new Promise(function(resolve, reject) {
-
 		if (!excelFileName) {
 			logger.error(excelFileName, 'excelToJson:' + 'excelFileName is null');
 			reject(new Error('filename is null'));	
 		}
 
 		excel(excelFileName, function(err, parsedData) {
-
 			if (err) {
 				logger.error(filename, 'excelToJson:' + 'not able to convert excel to json');
 				reject(new Error(err));
@@ -28,7 +25,6 @@ exports.excelToJson = function(excelFileName) {
 };
 
 function convertToJSON(array) {
-
 	if (!array) {
 		return null;
 	}

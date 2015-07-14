@@ -1,5 +1,7 @@
 module.exports = {
 	dbURI: 'mongodb://localhost/contentDB',
+	imageDir: '/Users/Kamal/DEV/images',
+	dbPort: 80,
 	secretKey: 'secretKey',
 	CONTENTS: 'contents',
 	USERDATA: 'userdata',

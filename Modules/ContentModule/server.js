@@ -253,7 +253,7 @@ app.get('/userdata', function(req, res) {
 		});
 });
 
-app.listen(8888, function() {
+app.listen(config.dbPort, function() {
 
 	logger.info(filename, 'server started on 8888 successfully');
 });

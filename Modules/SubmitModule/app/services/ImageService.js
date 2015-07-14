@@ -6,6 +6,7 @@ var path = require('path');
 var gm = require('gm').subClass({ imageMagick: true });
 
 var logger = require('./../../../../Common/Services/Logger');
+var config = require('./../../../../Common/Config/config');
 
 var imageWidth = 480;
 var imageHeight = 270;
@@ -34,12 +35,12 @@ exports.downloadImage = function(imageURI, imageFileName) {
 		}, function(error, response, body) {
 
 			if (!error) {
-				fs.writeFile(__dirname + '/../../public/static/images/' + imageFileName + path.extname(imageURI), body, 'binary', function(err) {
+				fs.writeFile(config.imageDir + imageFileName + path.extname(imageURI), body, 'binary', function(err) {
 					if (err) {
 						logger.error(filename, 'downloadImage:' + err);
 						reject(new Error('not able to save file'));
 					} else {
-						gm(__dirname + '/../../public/static/images/' + imageFileName + path.extname(imageURI))
+						gm(config.imageDir + imageFileName + path.extname(imageURI))
 							.resize(imageWidth, imageHeight, '!').write(imageFileName + path.extname(imageURI), 
 								function(err) { 
 
