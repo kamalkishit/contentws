@@ -11,6 +11,7 @@ var userDataService = require('./../../Common/Services/UserDataService');
 var filename = 'server';
 
 var app = express();
+app.use(express.static(config.imageDir));
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/public/images'));
 app.use(express.static(__dirname + './../SubmitModule/public/static/images'))

@@ -34,6 +34,15 @@
 					<a ng-href='{{ items[0].contentURL }}' target="_blank"><img ng-src='{{ items[0].imageURL | trustUrl }}' class='img-responsive'></a>
 					<h3>{{ items[0].ogTitle }}</h3>
 				</md-card-content>
+
+				<div layout='row'>
+					<div layout='column'>
+						{{ items[0].ogSiteName }}
+					</div>
+					<div layout='column' offset='10'>
+						{{ items[0].category }}
+					</div>
+				</div>
 				
 				<div layout='row' align='center' ng-if='isLoggedIn' aria-label='abc'>
 					<md-button class="md-icon-button" ng-click='like(items[0])' aria-label='abc'>
@@ -46,7 +55,9 @@
 				    <md-button class="md-icon-button" ng-click='bookmark(items[0])' aria-label='abc'>
 				      <md-icon md-svg-icon="bookmark.svg"></md-icon>
 				    </md-button>
-					<md-button class='md-raised'>Views</md-button>
+					<div>
+						{{ items[0].viewCount }} views
+					</div>
 				</div>
 			</md-card>
 		</div>
@@ -60,6 +71,14 @@
 					<a ng-href='{{ item.contentURL }}' target="_blank"><img ng-src='{{ item.imageURL | trustUrl }}' class='img-responsive'></a>
 					<h3>{{ item.ogTitle }}</h3>
 				</md-card-content>
+				<div layout='row'>
+					<div layout='column'>
+						{{ item.ogSiteName }}
+					</div>
+					<div layout='column' offset='10'>
+						{{ item.category }}
+					</div>
+				</div>
 				
 				<div layout='row' align='center' ng-if='isLoggedIn'>
 				<md-button class="md-icon-button" ng-click='like(item)' ng-class="{ green: item.isLiked}" aria-label='abc'>
@@ -72,7 +91,9 @@
 				    <md-button class="md-icon-button" ng-click='bookmark(item)' ng-class="{ green: item.isBookmarked}" aria-label='abc'>
 				      <md-icon md-svg-icon="bookmark.svg"></md-icon>
 				    </md-button>
-					<md-button class='md-raised'>Views</md-button>
+					<div>
+						{{ items[0].viewCount }} views
+					</div>
 				</div>
 			</md-card>
 			<br>

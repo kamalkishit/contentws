@@ -30,8 +30,18 @@ exports.downloadImage = function(imageURI, imageFileName) {
 			reject(new Error('imageFileName is null'));
 		}
 
+		var uri;
+
+		if (Array.isArray(imageURI)) {
+			uri = imageURI[0];
+		} else {
+			uri = imageURI;
+		}
+
+		console.log(uri)
+
 		request.get({
-			url: imageURI, encoding: 'binary'
+			url: uri, encoding: 'binary'
 		}, function(error, response, body) {
 
 			if (!error) {
@@ -41,7 +51,7 @@ exports.downloadImage = function(imageURI, imageFileName) {
 						reject(new Error('not able to save file'));
 					} else {
 						gm(config.imageDir + imageFileName + path.extname(imageURI))
-							.resize(imageWidth, imageHeight, '!').write(imageFileName + path.extname(imageURI), 
+							.resize(imageWidth, imageHeight, '!').write(config.imageDir + imageFileName + path.extname(imageURI), 
 								function(err) { 
 
 									if (err) {

@@ -1,5 +1,5 @@
 module.exports = {
 
-	filenameSource: '/Users/Kamal/Desktop/input.xlsx',
-	filenameDestination: '/Users/Kamal/Desktop/input.txt'
+	filenameSource: '/Users/Kamal/Desktop/TLI.xlsx',
+	filenameDestination: '/Users/Kamal/Desktop/TLI.txt'
 }

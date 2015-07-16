@@ -24,6 +24,8 @@ exports.createDocument = function(scrapedData, contentCategory, documentId) {
 			reject(new Error('contentCategory is null'));
 		}
 
+		console.log(scrapedData);
+
 		if (!documentId) {
 			logger.error(filename, 'createDocument:' + 'documentId is null');
 			reject(new Error('documentId is null'));
@@ -34,6 +36,7 @@ exports.createDocument = function(scrapedData, contentCategory, documentId) {
 			contentURL: scrapedData.url,
 			ogTitle: scrapedData.title,
 			ogDescription: scrapedData.description,
+			ogSiteName: scrapedData.site_name,
 			ogImageURL: scrapedData.image.url,
 			imageURL: documentId + path.extname(scrapedData.image.url),
 			category: contentCategory

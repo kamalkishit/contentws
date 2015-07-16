@@ -56,6 +56,7 @@ exports.setupModels = function() {
 		imageType : { type: String },
 		ogDescription : { type: String, es_indexed: true },			// OpenGraph tag
 		ogSiteName : { type: String },								// OpenGraph tag
+		videoURL: { type: String },
 		category : { type: String },									// category of the content
 		likes : { type: Number, default: 0 },
 		dislikes : { type: Number, default: 0 },
