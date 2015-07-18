@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<title>Login Module</title>
+
+	<meta name='viewport' content='width=device-width, initial-scale=1'>
+
+	<link href="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.4/angular-material.min.css" rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic" rel="stylesheet">
+</head>
+<body ng-app='myApp'>
+
+	<br>
+	<br>
+	<br>
+	<br>
+
+	<div layout='row'>	
+		<div flex='34' offset-gt-sm='33' flex-sm='100'>
+			<md-card flex>
+				<md-card-content>
+					<div layout='column' flex>
+						<br>
+						<br>
+						<h2 align='center'>CONTENTWS</h2>
+
+						<md-button class='md-raised' href='/login'>Login</md-button>
+						<md-button class='md-raised' href='signup'>SignUp</md-button>
+
+						<br>
+						<br>
+					</div>
+				</md-card-content>
+			</md-card>
+		</div>
+	</div>
+
+
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-animate.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-aria.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.4/angular-material.js"></script>
+
+    <script>
+    	angular.module('myApp', ['ngMaterial']);
+    </script>	
+</body>
+</html>

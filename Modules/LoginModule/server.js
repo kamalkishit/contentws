@@ -1,13 +1,11 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 
-var logger = require('./../../Common/Services/Logger');
-var config = require('./../../Common/Config/config');
-var dbSetupService = require('./../../Common/Services/DBSetupService');
-var config = require('./../../Common/Config/config');
-
-var loginService = require('./app/services/LoginService');
-var signupService = require('./app/services/SignUpService');
+var logger = require('cws-logger');
+var config = require('cws-config');
+var dbSetupService = require('cws-dbsetup-service');
+var loginService = require('cws-login-service');
+var signupService = require('cws-signup-service');
 
 var filename = 'server';
 

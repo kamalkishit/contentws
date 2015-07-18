@@ -1,7 +1,7 @@
 var fs = require('fs');
 var gm = require('gm').subClass({ imageMagick: true });
 
-var logger = require('./../../../../Common/Services/Logger');
+var logger = require('cws-logger');
 
 var filename = 'ImageConversionService';
 var imageWidth = 480;

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Login</title>
+
+	<meta name='viewport' content='width=device-width, initial-scale=1'>
+	
+	<link href="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.4/angular-material.min.css" rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic" rel="stylesheet">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link href='./style.css' rel='stylesheet'>    
+</head>
+<body ng-app='ContentModule' ng-controller='signupController'>
+
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<div layout='row'>	
+		<div flex='34' offset-gt-sm='33' flex-sm='100'>
+			<md-card flex>
+				<md-card-content>
+					<div layout='column' flex>
+						<br>
+						<br>
+						<h2 align='center'>SignUp</h2>
+						<md-input-container>
+							<label>Name</label>
+							<input type="text" ng-model="username" required minlength='6' md-maxlength='50' required>
+						</md-input-container>
+
+						<md-input-container>
+							<label>Password</label>
+							<input type="password" ng-model="password" required minlength='6' md-maxlength='12' required>
+						</md-input-container>
+
+						<h3 ng-if='error' align='center'>
+							{{ error }}
+						</h3>
+
+						<h3 ng-if='success' align='center'>
+							{{ success }}
+						</h3>
+
+						<md-button class='md-raised' ng-disabled='!username || !password' ng-click='signup()'>
+							<span ng-if='!processing'>SignUp</span>
+							<span ng-if='processing' class='spinner'><i class="fa fa-repeat"></i></span>
+						</md-button>
+
+						<br>
+						<br>
+					</div>
+				</md-card-content>
+			</md-card>
+		</div>
+	</div>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-animate.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-aria.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.4/angular-material.js"></script>
+
+    <script src='./angularModule.js'></script>
+    <script src='./infinite-scroll.js'></script>
+</body>
+</html>

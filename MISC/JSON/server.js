@@ -1,8 +1,8 @@
 'use strict'
-
-var excelJsonService = require('./ExcelJSONService');
-var config = require('./config');
 var fs = require('fs');
+var excelJsonService = require('cws-exceljson-service');
+var config = require('cws-config');
+
 
 excelJsonService.excelToJson(config.filenameSource)
 	.then(function(jsonData) {

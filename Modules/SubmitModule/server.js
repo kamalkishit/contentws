@@ -1,11 +1,10 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 
-var logger = require('./../../Common/Services/Logger');
-var config = require('./../../Common/Config/config');
-var dbSetupService = require('./../../Common/Services/DBSetupService');
-var config = require('./../../Common/Config/config');
-var urlInserterService = require('./app/services/URLInserterService');
+var logger = require('cws-logger');
+var config = require('cws-config');
+var dbSetupService = require('cws-dbsetup-service');
+var urlInserterService = require('cws-url-inserter-service');
 
 var filename = 'server';
 
@@ -14,13 +13,13 @@ app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.get('/', function(req, res) {
+app.get('/submit', function(req, res) {
 
 	logger.info(filename, 'GET /:');
 	res.sendFile(__dirname + '/index.html');
 });
 
-app.post('/', function(req, res) {
+app.post('/submit', function(req, res) {
 	
 	if (!req.body.contentURL) {
 		res.status(config.httpFailure);
@@ -48,5 +47,5 @@ app.post('/', function(req, res) {
 
 app.listen(config.dbPort, function() {
 
-	logger.info(filename, 'server started on port 8888');
+	logger.info(filename, 'server started on port ' + config.dbPort);
 });

@@ -23,81 +23,89 @@
 
 	<div layout='column'>
 	    <md-toolbar layout="row">
+	    	<div flex='15'><h4>ContentWS</h4></div>
+	    	<div flex='10'><h4>Latest</h4></div>
+	    	<div flex='10'><h4>Trending</h4></div>
+	    	<div flex='10'><h4>Most Viewed</h4></div>
 
-      		<h3>ContentWS</h3>
-    		</md-toolbar>
-    	</div>
+	    	<md-input-container flex='20' offset='25'>
+				<input type="text" ng-model='searchStr'>
+			</md-input-container>
+			<md-button class='md-raised' ng-click='search()'>
+				<span>Search</span></span>
+			</md-button>
+    	</md-toolbar>
+    </div>
 
-		<div layout='row'>
-			<md-card flex-gt-sm='50' offset-gt-sm='25'>					
-				<md-card-content>
-					<a ng-href='{{ items[0].contentURL }}' target="_blank"><img ng-src='{{ items[0].imageURL | trustUrl }}' class='img-responsive'></a>
-					<h3>{{ items[0].ogTitle }}</h3>
-				</md-card-content>
+	<div layout='row'>
+		<md-card flex-gt-sm='50' offset-gt-sm='25'>					
+			<md-card-content>
+				<a ng-href='{{ items[0].contentURL }}' target="_blank"><img ng-src='{{ items[0].imageURL | trustUrl }}' class='img-responsive'></a>
+				<h3>{{ items[0].ogTitle }}</h3>
+			</md-card-content>
 
-				<div layout='row'>
-					<div layout='column'>
-						{{ items[0].ogSiteName }}
-					</div>
-					<div layout='column' offset='10'>
-						{{ items[0].category }}
-					</div>
+			<div layout='row'>
+				<md-button class='md-raised'>
+					{{ items[0].ogSiteName }}
+				</md-button>
+				<md-button class='md-raised' offset='10'>
+					{{ items[0].category }}
+				</md-button>
+			</div>
+			
+			<div layout='row' align='center' ng-if='isLoggedIn' aria-label='abc'>
+				<md-button class="md-icon-button" ng-click='like(items[0])' aria-label='abc'>
+			      <md-icon md-svg-src="lnr-thumbs-up.svg"></md-icon>
+			    </md-button>
+			    <!-- mini-FAB -->
+			    <md-button class="md-icon-button" ng-click='dislike(items[0])' aria-label='abc'>
+			      <md-icon md-svg-icon="lnr-thumbs-down.svg"></md-icon>
+			    </md-button>
+			    <md-button class="md-icon-button" ng-click='bookmark(items[0])' aria-label='abc'>
+			      <md-icon md-svg-icon="lnr-bookmark.svg"></md-icon>
+			    </md-button>
+				<div>
+					{{ items[0].viewCount }} views
 				</div>
-				
-				<div layout='row' align='center' ng-if='isLoggedIn' aria-label='abc'>
-					<md-button class="md-icon-button" ng-click='like(items[0])' aria-label='abc'>
-				      <md-icon md-svg-src="thumbs-up.svg"></md-icon>
-				    </md-button>
-				    <!-- mini-FAB -->
-				    <md-button class="md-icon-button" ng-click='dislike(items[0])' aria-label='abc'>
-				      <md-icon md-svg-icon="thumbs-down.svg"></md-icon>
-				    </md-button>
-				    <md-button class="md-icon-button" ng-click='bookmark(items[0])' aria-label='abc'>
-				      <md-icon md-svg-icon="bookmark.svg"></md-icon>
-				    </md-button>
-					<div>
-						{{ items[0].viewCount }} views
-					</div>
-				</div>
-			</md-card>
-		</div>
+			</div>
+		</md-card>
+	</div>
 
+	<br>
+	<br>
+
+	<div layout='row' flex-gt-sm='70' offset-gt-sm='15' infinite-scroll='loadMore()' infinite-scroll-distance='1' layout-wrap>
+		<md-card flex-gt-sm='40' ng-repeat='item in items'>					
+			<md-card-content>
+				<a ng-href='{{ item.contentURL }}' target="_blank"><img ng-src='{{ item.imageURL | trustUrl }}' class='img-responsive'></a>
+				<h3>{{ item.ogTitle }}</h3>
+			</md-card-content>
+			<div layout='row'>
+				<md-button class='md-raised'>
+					{{ item.ogSiteName }}
+				</md-button>
+				<md-button class='md-raised' offset='10'>
+					{{ item.category }}
+				</md-button>
+			</div>
+			
+			<div layout='row' align='center' ng-if='isLoggedIn'>
+			<md-button class="md-icon-button" ng-click='like(item)' ng-class="{ green: item.isLiked}" aria-label='abc'>
+			      <md-icon md-svg-src="lnr-thumbs-up.svg" aria-label='abc'></md-icon>
+			    </md-button>
+			    <!-- mini-FAB -->
+			    <md-button class="md-icon-button" ng-click='dislike(item)' ng-class="{ red: item.isDisliked}" aria-label='abc'>
+			      <md-icon md-svg-icon="lnr-thumbs-down.svg"></md-icon>
+			    </md-button>
+			    <md-button class="md-icon-button" ng-click='bookmark(item)' ng-class="{ green: item.isBookmarked}" aria-label='abc'>
+			      <md-icon md-svg-icon="lnr-bookmark.svg"></md-icon>
+			    </md-button>
+				<div>
+					{{ items[0].viewCount }} views
+				</div>
+			</div>
+		</md-card>
 		<br>
-		<br>
-
-		<div layout='row' flex-gt-sm='70' offset-gt-sm='15' infinite-scroll='loadMore()' infinite-scroll-distance='1' layout-wrap>
-			<md-card flex-gt-sm='40' ng-repeat='item in items'>					
-				<md-card-content>
-					<a ng-href='{{ item.contentURL }}' target="_blank"><img ng-src='{{ item.imageURL | trustUrl }}' class='img-responsive'></a>
-					<h3>{{ item.ogTitle }}</h3>
-				</md-card-content>
-				<div layout='row'>
-					<div layout='column'>
-						{{ item.ogSiteName }}
-					</div>
-					<div layout='column' offset='10'>
-						{{ item.category }}
-					</div>
-				</div>
-				
-				<div layout='row' align='center' ng-if='isLoggedIn'>
-				<md-button class="md-icon-button" ng-click='like(item)' ng-class="{ green: item.isLiked}" aria-label='abc'>
-				      <md-icon md-svg-src="thumbs-up.svg" aria-label='abc'></md-icon>
-				    </md-button>
-				    <!-- mini-FAB -->
-				    <md-button class="md-icon-button" ng-click='dislike(item)' ng-class="{ red: item.isDisliked}" aria-label='abc'>
-				      <md-icon md-svg-icon="thumbs-down.svg"></md-icon>
-				    </md-button>
-				    <md-button class="md-icon-button" ng-click='bookmark(item)' ng-class="{ green: item.isBookmarked}" aria-label='abc'>
-				      <md-icon md-svg-icon="bookmark.svg"></md-icon>
-				    </md-button>
-					<div>
-						{{ items[0].viewCount }} views
-					</div>
-				</div>
-			</md-card>
-			<br>
-		</div>
 	</div>
 
 	<script src='https://code.jquery.com/jquery-2.1.4.js'></script>

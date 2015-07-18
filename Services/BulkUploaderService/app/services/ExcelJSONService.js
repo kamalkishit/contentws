@@ -1,6 +1,6 @@
 var excel = require('excel');
 
-var logger = require('./../../../../Common/Services/Logger');
+var logger = require('cws-Logger');
 
 var filename = 'ExcelJsonService';
 

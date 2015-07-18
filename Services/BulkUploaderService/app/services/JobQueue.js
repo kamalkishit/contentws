@@ -1,8 +1,8 @@
 var kue = require('kue');
 
-var logger = require('./../../../../Common/Services/Logger');
-var config = require('./../../../../Common/Config/config');
-var urlInserterService = require('./../../../../Modules/SubmitModule/app/services/URLInserterService');
+var logger = require('cws-logger');
+var config = require('cws-config');
+var urlInserterService = require('cws-url-inserter-service');
 
 var filename = 'JobQueue';
 

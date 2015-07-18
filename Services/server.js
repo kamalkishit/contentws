@@ -1,11 +1,12 @@
-var dbSetupService = require('./../Common/Services/DBSetupService');
+var dbSetupService = require('cws-dbsetup-service');
 
 var jobQueue = require('./BulkUploaderService/app/services/JobQueue');
-var excelJsonService = require('./BulkUploaderService/app/services/ExcelJSONService');
+var excelJsonService = require('cws-exceljson-service');
 var fs = require('fs');
+var config = require('cws-config');
 jobQueue.processJobs('abc')
 
-fs.readFile(__dirname + '/input.txt', function(err, data) {
+fs.readFile(config.filenameDestination, function(err, data) {
     if (!err) {
         jsonData = JSON.parse(data);
 		for (var i = 0; i < jsonData.length; i++) {

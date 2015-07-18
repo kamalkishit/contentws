@@ -1,10 +1,10 @@
 'use strict';
 
-var models = require('./../../../../Common/Models/models');
-var config = require('./../../../../Common/Config/config');
-var dbSetupService = require('./../../../../Common/Services/DBSetupService');
-var redisService = require('./../../../../Common/Services/RedisService');
-var logger = require('./../../../../Common/Services/Logger');
+var models = require('cws-models');
+var config = require('cws-config');
+var dbSetupService = require('cws-dbsetup-service');
+var redisService = require('cws-redis-service');
+var logger = require('cws-logger');
 
 var Content = models.getContentModel();
 

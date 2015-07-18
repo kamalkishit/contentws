@@ -1,26 +1,144 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 
-var logger = require('./../../Common/Services/Logger');
-var config = require('./../../Common/Config/config');
+var logger = require('cws-logger');
+var config = require('cws-config');
 var apiService = require('./app/services/APIService');
-var likeDislikeService = require('./app/services/LikeDislikeService');
-var bookmarkService = require('./app/services/BookmarkService');
-var userDataService = require('./../../Common/Services/UserDataService');
+var databaseService = require('cws-database-service');
+var loginService = require('cws-login-service');
+var signupService = require('cws-signup-service');
+var likeDislikeService = require('cws-likedislike-service');
+var bookmarkService = require('cws-bookmark-service');
+var userDataService = require('cws-userdata-service');
+var Content = require('cws-models').getContentModel();
 
 var filename = 'server';
 
 var app = express();
 app.use(express.static(config.imageDir));
+app.use(express.static(__dirname));
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/public/images'));
-app.use(express.static(__dirname + './../SubmitModule/public/static/images'))
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.get('/', function(req, res) {
 
 	res.sendFile(__dirname + '/index2.html');
+});
+
+app.get('/login', function(req, res) {
+
+	res.sendFile(__dirname + '/public/login.html');
+});
+
+app.post('/login', function(req, res) {
+
+	if (!req.body.username) {
+		res.status(config.httpFailure);
+		logger.error(filename, 'POST /login:' + 'username is missing');
+		res.send({ 'error': 'username is missing' });
+	}
+
+	if (!req.body.password) {
+		res.status(config.httpFailure);
+		logger.error(filename, 'POST /login:' + 'password is missing');
+		res.send('password is missing');
+	}		
+
+	loginService.login(req.body.username, req.body.password)
+		.then(function(success) {
+
+			logger.info(filename, 'POST /login:' + 'user logged in successfully');
+			res.status(config.httpSuccess);
+			res.send(success);
+		}, function(err) {
+
+			logger.error(filename, 'POST /login:' + err);
+			res.status(config.httpFailure);
+			res.send(err);
+		});
+});
+
+app.get('/search', function(req, res) {
+
+	if (!req.query.searchStr) {
+		res.status(config.httpFailure);
+		logger.error(filename, 'GET /search:' + 'queryString is missing');
+		res.send({ 'error': 'queryString is missing' });
+	}
+
+	databaseService.search(Content, req.query.searchStr)
+		.then(function(results) {
+			console.log(results);
+		}, function(err) {
+			console.log(err);
+		});
+})
+
+app.get('/signup', function(req, res) {
+
+	res.sendFile(__dirname + '/public/signup.html');
+});
+
+app.post('/signup', function(req, res) {
+
+	if (!req.body.username) {
+		res.status(config.httpFailure);
+		logger.error(filename, 'POST /signup:' + 'username is missing');
+		res.send('username is missing');
+	}
+
+	if (!req.body.password) {
+		res.status(config.httpFailure);
+		logger.error(filename, 'POST /signup:' + 'password is missing');
+		res.send('password is missing');
+	}		
+
+	signupService.signup(req.body.username, req.body.password)
+		.then(function(success) {
+
+			logger.info(filename, 'POST /signup:' + 'user registered successfully');
+			res.status(config.httpSuccess);
+			res.send(success);
+		}, function(err) {
+
+			logger.error(filename, 'POST /signup:' + err);
+			res.status(config.httpFailure);
+			res.send(err);
+		});
+});
+
+app.get('/submit', function(req, res) {
+
+	logger.info(filename, 'GET /:');
+	res.sendFile(__dirname + '/public/submit.html');
+});
+
+app.post('/submit', function(req, res) {
+	
+	if (!req.body.contentURL) {
+		res.status(config.httpFailure);
+		logger.error(filename, 'POST /:' + 'contentURL is missing');
+		res.send('contentURL is missing');
+	}
+
+	if (!req.body.category) {
+		res.status(config.httpFailure);
+		logger.error(filename, 'POST /:' + 'category is missing');
+		res.send('category is missing');
+	}		
+
+	urlInserterService.insertURL(req.body.contentURL, req.body.category)
+		.then(function(success) {
+			logger.info(filename, 'POST /:' + success);
+			res.status(config.httpSuccess);
+			res.json({success: true});
+		}, function(err) {
+			logger.error(filename, 'POST /:' + err);
+			res.status(config.httpFailure);
+			res.json({ error: true});
+		});
 });
 
 app.get('/contents', function(req, res) {
@@ -48,13 +166,14 @@ app.get('/contents', function(req, res) {
 
 app.post('/like', function(req, res) {
 
+	console.log(req.body.userId);
 	likeDislikeService.like(req.body.userId, req.body.contentId)
 		.then(function(contents) {
 
 			logger.info(filename, 'POST /like:' + 'SUCCESS');
 
 					for (var i = 0; i < contents.length; i++) {
-						redisService.hget('abc' + ':' + 'likes' , contents[i].contentId)
+						redisService.hget(req.body.userId + ':likes' , contents[i].contentId)
 							.then(function(success) {
 
 								console.log(success);
@@ -62,7 +181,7 @@ app.post('/like', function(req, res) {
 							});
 
 
-						redisService.hget('abc' + ':' + 'dislikes' , contents[i].contentId)
+						redisService.hget(req.body.userId + ':dislikes' , contents[i].contentId)
 							.then(function(success) {
 
 								contents[i].isDisliked = success;

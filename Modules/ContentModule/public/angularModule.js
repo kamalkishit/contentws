@@ -1,10 +1,105 @@
 var app = angular.module('ContentModule', ['ngMaterial', 'infinite-scroll']);
 
+app.config(function($mdThemingProvider) {
+  $mdThemingProvider.theme('default')
+    .primaryPalette('grey', {
+    	default: '50'
+    })
+    .accentPalette('orange');
+});
+
 app.filter('trustUrl', function($sce) {
 	
 	return function(url) {
 		
 		return $sce.trustAsResourceUrl(url);
+	};
+});
+
+app.factory('InsertService', function($http) {
+
+	var insertService = {};
+
+	insertService.insert = function(contentURL, category) {
+
+		console.log(contentURL);
+		console.log(category);
+		return $http.post('/', { contentURL: contentURL, category: category });
+	};
+
+	return insertService;
+});
+
+app.factory('SignUpService', function($http) {
+
+	var signupService = {};
+
+	signupService.signup = function(username, password) {
+
+		return $http.post('/signup', { username: username, password: password });
+	};
+
+	return signupService;
+});
+
+app.factory('LoginService', function($http) {
+
+	var loginService = {};
+
+	loginService.login = function(username, password) {
+
+		return $http.post('/login', { username: username, password: password });
+	};
+
+	return loginService;
+});
+
+app.controller('signupController', function($scope, $http, SignUpService) {
+
+	$scope.processing = false;
+
+	$scope.signup = function() {
+
+		$scope.processing = true;
+		$scope.error = null;
+		$scope.success = null;
+		$http.post('/signup', { username: $scope.username, password: $scope.password })
+			.then(function(response) {
+				$scope.success = response.data;
+				$scope.processing = false;
+			}, function(err) {
+				$scope.error = err;
+				$scope.processing = false;
+			});
+
+		$scope.username = null;
+		$scope.password = null;	
+	};
+});
+
+app.controller('loginController', function($scope, $http, $location, $window, LoginService) {
+
+	$scope.processing = false;
+
+	$scope.login = function() {
+
+		$scope.processing = true;
+		$scope.error = null;
+		$scope.success = null;
+		$http.post('/login', { username: $scope.username, password: $scope.password })
+			.then(function(response) {
+				$window.sessionStorage.setItem('userId', response.data.userId);
+				$window.sessionStorage.setItem('token', response.data.token);
+				$scope.success = response.data;
+				$scope.processing = false;
+				$window.location.href = '/index2.html';
+			}, function(err) {
+				$scope.error = err;
+				$scope.processing = false;
+			});
+
+		$scope.username = null;
+		$scope.password = null;	
 	};
 });
 
@@ -72,7 +167,9 @@ app.factory('SearchService', function($http) {
 
 	searchService.search = function(searchStr) {
 
-		return $http.get('/api/search', {
+		console.log(searchStr)
+
+		return $http.get('/search', {
 			params: { searchStr: searchStr }
 		});
 	};
@@ -200,6 +297,38 @@ app.controller('searchController', function($scope, SearchService) {
 	};	
 });
 
+app.controller('submitController', function($scope, InsertService) {
+
+	$scope.categories = [];
+	$scope.categories[0] = 'Education';
+	$scope.categories[1] = 'Health';
+	$scope.categories[2] = 'Humanity';
+	$scope.categories[3] = 'Governance';
+
+	$scope.processing = false;
+
+	$scope.insert = function() {
+
+		$scope.processing = true;
+		$scope.success = null;
+		$scope.error = null;
+
+		InsertService.insert($scope.contentURL, $scope.selectedCategory)
+			.then(function(success) {
+				
+				$scope.success = success.data;
+				$scope.processing = false;
+			}, function(err) {
+				
+				$scope.error = err;
+				$scope.processing = false;
+			});
+
+		$scope.contentURL = null;
+		$scope.selectedCategory = null;			
+	};
+});
+
 app.controller('findController', function($scope, FindService) {
 
 	$scope.startIndex = 0;
@@ -234,15 +363,12 @@ app.controller('contentController',
 	$scope.limit = 10;
 	$scope.items = [];
 
-	UserDataService.getUserData("kamal");
-
 	if ($window.sessionStorage.getItem('token') != null) {
 		$scope.isLoggedIn = true;
+		UserDataService.getUserData($window.sessionStorage.getItem('userId'));
 	} else {
 		$scope.isLoggedIn = false;
 	}
-
-	$scope.isLoggedIn = true;
 
 	FindService.findAll($scope.startIndex, $scope.limit)
 		.then(function(records) {
@@ -250,13 +376,15 @@ app.controller('contentController',
 			var contents = records.data.contents;
 			console.log(contents);
 
-			for (var i = 0; i < contents.length; i++) {
+			if ($scope.isLoggedIn) {
+				for (var i = 0; i < contents.length; i++) {
 					contents[i].isLiked = UserDataService.isLiked(contents[i].contentId);
 					contents[i].isDisliked = UserDataService.isDisliked(contents[i].contentId);
 					contents[i].isBookmarked = UserDataService.isBookmarked(contents[i].contentId);
 				}
+			}
+			
 			$scope.items = contents;
-			console.log(contents);
 			$scope.startIndex += $scope.limit;
 		}, function(err) {
 
@@ -293,7 +421,6 @@ app.controller('contentController',
 	};
 
 	$scope.search = function() {
-		console.log($scope.searchStr);
 		SearchService.search($scope.searchStr)
 			.then(function(searchResults) {
 
@@ -305,15 +432,15 @@ app.controller('contentController',
 	};
 
 	$scope.like = function(item) {
-		LikeDislikeService.like('kamal', item);
+		LikeDislikeService.like($window.sessionStorage.getItem('userId'), item);
 	};
 
 	$scope.dislike = function(item) {
-		LikeDislikeService.dislike('kamal', item);
+		LikeDislikeService.dislike($window.sessionStorage.getItem('userId'), item);
 	};
 
 	$scope.bookmark = function(item) {
-		BookmarkService.bookmark('kamal', item);
+		BookmarkService.bookmark($window.sessionStorage.getItem('userId'), item);
 	}
 
 	$scope.updateViewCount = function(item) {

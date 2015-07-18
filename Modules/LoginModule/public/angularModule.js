@@ -68,6 +68,7 @@ app.controller('loginController', function($scope, $http, $location, $window, Lo
 				}
 				$scope.success = response.data;
 				$scope.processing = false;
+				$window.location.href = '/contents';
 			}, function(err) {
 				$scope.error = err;
 				$scope.processing = false;
