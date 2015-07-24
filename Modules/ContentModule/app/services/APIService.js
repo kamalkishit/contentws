@@ -5,6 +5,7 @@ var config = require('cws-config');
 var dbSetupService = require('cws-dbsetup-service');
 var redisService = require('cws-redis-service');
 var logger = require('cws-logger');
+var databaseService = require('cws-database-service');
 
 var Content = models.getContentModel();
 
@@ -14,34 +15,27 @@ exports.find = function(startIndex, limit) {
 
 	var promise = new Promise(function(resolve, reject) {
 
-		Content.find().skip(startIndex).limit(limit)
-			.exec(function(err, contents) {
+		databaseService.find(Content, startIndex, limit)
+			.then(function(contents) {
 
-				if (err) {
-					logger.error(filename, 'find:' + err);
-					reject(new Error(err));
-				} else {
 					logger.info(filename, 'find:' + 'success');
-/*
-					for (var i = 0; i < contents.length; i++) {
-						redisService.hget('kamal' + ':' + 'likes' , contents[i].contentId)
-							.then(function(success) {
-
-								console.log(success);
-								contents[i].isLiked = success;
-							});
-
-
-						redisService.hget('kamal' + ':' + 'dislikes' , contents[i].contentId)
-							.then(function(success) {
-
-								contents[i].isDisliked = success;
-							});				
-					}
-
-					console.log(contents);*/
 					resolve(contents);
 				}
+			, function(err) {
+				console.log(err);
+			});
+	});
+
+	return promise;
+};
+
+exports.findLastCreated = function(lastCreatedTime, startIndex, limit) {
+	var promise = new Promise(function(resolve, reject) {
+		databaseService.findLastCreated(Content, lastCreatedTime, startIndex, limit)
+			.then(function(contents) {
+				resolve(contents);
+			}, function (err) {
+				console.log(err);
 			});
 	});
 

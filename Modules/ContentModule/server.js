@@ -143,25 +143,29 @@ app.post('/submit', function(req, res) {
 
 app.get('/contents', function(req, res) {
 
-	apiService.find(req.query.startIndex, req.query.limit)
-		.then(function(results) {
-
-			logger.info(filename, 'GET /contents:' + 'SUCCESS');
-			res.status(config.httpSuccess);
-			/*userService.getLikesData('kamal')
-				.then(function(keys) {
-					console.log('i m here');
-					console.log(keys);
-				}); */
-			//res.send("success");
-			console.log(config.CONTENTS);
-			res.send({ "contents": results });
-		}, function(err) {
-
-			logger.error(filename, 'GET /contents:' + err);
-			res.status(config.httpFailure);
-			res.send(err);
-		});
+	if (req.query.lastCreatedDate) {
+		console.log(req.query.lastCreatedDate)
+		apiService.findLastCreated(req.query.lastCreatedDate, req.query.startIndex, req.query.limit)
+			.then(function(results) {
+				res.status(config.httpSuccess);
+				res.send({ "contents": results });
+			}, function(err) {
+				res.status(config.httpFailure);
+				res.send(err);
+			})
+	} else {
+		apiService.find(req.query.startIndex, req.query.limit)
+			.then(function(results) {
+				logger.info(filename, 'GET /contents:' + 'SUCCESS');
+				res.status(config.httpSuccess);
+				console.log(config.CONTENTS);
+				res.send({ "contents": results });
+			}, function(err) {
+				logger.error(filename, 'GET /contents:' + err);
+				res.status(config.httpFailure);
+				res.send(err);
+			});
+	}
 });
 
 app.post('/like', function(req, res) {

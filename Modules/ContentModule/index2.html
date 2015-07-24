@@ -38,12 +38,8 @@
     </div>
 
 	<div layout='row'>
-		<md-card flex-gt-sm='50' offset-gt-sm='25'>					
-			<md-card-content>
-				<a ng-href='{{ items[0].contentURL }}' target="_blank"><img ng-src='{{ items[0].imageURL | trustUrl }}' class='img-responsive'></a>
-				<h3>{{ items[0].ogTitle }}</h3>
-			</md-card-content>
-
+		<md-card flex-gt-sm='50' offset-gt-sm='25'>	
+			<a ng-href='{{ items[0].contentURL }}' target="_blank"><img ng-src='{{ items[0].imageURL | trustUrl }}' class='img-responsive'></a>	
 			<div layout='row'>
 				<md-button class='md-raised'>
 					{{ items[0].ogSiteName }}
@@ -51,8 +47,13 @@
 				<md-button class='md-raised' offset='10'>
 					{{ items[0].category }}
 				</md-button>
-			</div>
-			
+			</div>	
+			<md-divider></md-divider>		
+			<md-card-content>
+				
+				<h3>{{ items[0].ogTitle }}</h3>
+			</md-card-content>
+			<md-divider></md-divider>
 			<div layout='row' align='center' ng-if='isLoggedIn' aria-label='abc'>
 				<md-button class="md-icon-button" ng-click='like(items[0])' aria-label='abc'>
 			      <md-icon md-svg-src="lnr-thumbs-up.svg"></md-icon>
@@ -75,11 +76,8 @@
 	<br>
 
 	<div layout='row' flex-gt-sm='70' offset-gt-sm='15' infinite-scroll='loadMore()' infinite-scroll-distance='1' layout-wrap>
-		<md-card flex-gt-sm='40' ng-repeat='item in items'>					
-			<md-card-content>
-				<a ng-href='{{ item.contentURL }}' target="_blank"><img ng-src='{{ item.imageURL | trustUrl }}' class='img-responsive'></a>
-				<h3>{{ item.ogTitle }}</h3>
-			</md-card-content>
+		<md-card flex-gt-sm='40' ng-repeat='item in items'>	
+			<a ng-href='{{ item.contentURL }}' target="_blank"><img ng-src='{{ item.imageURL | trustUrl }}'></a>
 			<div layout='row'>
 				<md-button class='md-raised'>
 					{{ item.ogSiteName }}
@@ -87,8 +85,13 @@
 				<md-button class='md-raised' offset='10'>
 					{{ item.category }}
 				</md-button>
-			</div>
-			
+			</div>	
+			<md-divider></md-divider>		
+			<md-card-content>
+				
+				<h5>{{ item.ogTitle }}</h5>
+			</md-card-content>
+			<md-divider></md-divider>
 			<div layout='row' align='center' ng-if='isLoggedIn'>
 			<md-button class="md-icon-button" ng-click='like(item)' ng-class="{ green: item.isLiked}" aria-label='abc'>
 			      <md-icon md-svg-src="lnr-thumbs-up.svg" aria-label='abc'></md-icon>
