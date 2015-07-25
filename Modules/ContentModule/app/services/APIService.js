@@ -12,12 +12,9 @@ var Content = models.getContentModel();
 var filename = 'APIService';
 
 exports.find = function(startIndex, limit) {
-
 	var promise = new Promise(function(resolve, reject) {
-
 		databaseService.find(Content, startIndex, limit)
 			.then(function(contents) {
-
 					logger.info(filename, 'find:' + 'success');
 					resolve(contents);
 				}
