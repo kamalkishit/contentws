@@ -4,6 +4,8 @@ var bodyParser = require('body-parser');
 var logger = require('cws-logger');
 var config = require('cws-config');
 var apiService = require('./app/services/APIService');
+//var dbsetupService = require('cws-dbsetup-service');
+var contentService = require('./contentService');
 var databaseService = require('cws-database-service');
 var loginService = require('cws-login-service');
 var signupService = require('cws-signup-service');
@@ -23,7 +25,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.get('/', function(req, res) {
-	res.sendFile(__dirname + '/index2.html');
+	res.sendFile(__dirname + '/index.html');
 });
 
 app.get('/login', function(req, res) {
@@ -31,10 +33,10 @@ app.get('/login', function(req, res) {
 });
 
 app.post('/login', function(req, res) {
-	if (!req.body.username) {
+	if (!req.body.emailId) {
 		res.status(config.httpFailure);
-		logger.error(filename, 'POST /login:' + 'username is missing');
-		res.send({ 'error': 'username is missing' });
+		logger.error(filename, 'POST /login:' + 'emailId is missing');
+		res.send({ 'error': 'emailId is missing' });
 	}
 
 	if (!req.body.password) {
@@ -43,14 +45,12 @@ app.post('/login', function(req, res) {
 		res.send('password is missing');
 	}		
 
-	loginService.login(req.body.username, req.body.password)
+	loginService.login(req.body.emailId, req.body.password)
 		.then(function(success) {
-
 			logger.info(filename, 'POST /login:' + 'user logged in successfully');
 			res.status(config.httpSuccess);
 			res.send(success);
 		}, function(err) {
-
 			logger.error(filename, 'POST /login:' + err);
 			res.status(config.httpFailure);
 			res.send(err);
@@ -64,12 +64,19 @@ app.get('/search', function(req, res) {
 		res.send({ 'error': 'queryString is missing' });
 	}
 
+	contentService.search(req.query.searchStr)
+		.then(function(contents) {
+			console.log(contents);
+		}, function(err) {
+			console.log(err);
+		});
+/*
 	databaseService.search(Content, req.query.searchStr)
 		.then(function(results) {
 			console.log(results);
 		}, function(err) {
 			console.log(err);
-		});
+		});*/
 });
 
 app.get('/signup', function(req, res) {
@@ -119,7 +126,15 @@ app.post('/submit', function(req, res) {
 		res.send('category is missing');
 	}		
 
-	urlInserterService.insertURL(req.body.contentURL, req.body.category)
+	contentService.insertContent(req.body.contentOwnerId, req.body.contentURL, req.body.category)
+		.then(function(success) {
+			res.status(config.httpSuccess);
+			res.json({ success: true });
+		}, function(err) {
+			res.status(config.httpFailure);
+			res.json({ error: true });
+		});
+	/*urlInserterService.insertURL(req.body.contentURL, req.body.category)
 		.then(function(success) {
 			logger.info(filename, 'POST /:' + success);
 			res.status(config.httpSuccess);
@@ -128,11 +143,20 @@ app.post('/submit', function(req, res) {
 			logger.error(filename, 'POST /:' + err);
 			res.status(config.httpFailure);
 			res.json({ error: true});
-		});
+		});*/
 });
 
 app.get('/contents', function(req, res) {
-	if (req.query.lastCreatedDate) {
+	contentService.getContents(req.query.lastCreatedDate)
+		.then(function(contents) {
+			res.status(config.httpSuccess);
+			res.send({ "contents": contents });
+		}, function(err) {
+			console.log(err)
+			res.status(config.httpFailure);
+			res.send(err);
+		})
+	/*if (req.query.lastCreatedDate) {
 		console.log(req.query.lastCreatedDate)
 		apiService.findLastCreated(req.query.lastCreatedDate, req.query.startIndex, req.query.limit)
 			.then(function(results) {
@@ -154,179 +178,79 @@ app.get('/contents', function(req, res) {
 				res.status(config.httpFailure);
 				res.send(err);
 			});
-	}
+	}*/
 });
 
 app.post('/like', function(req, res) {
-	console.log(req.body.userId);
-	likeDislikeService.like(req.body.userId, req.body.contentId)
-		.then(function(contents) {
-			logger.info(filename, 'POST /like:' + 'SUCCESS');
-			for (var i = 0; i < contents.length; i++) {
-				redisService.hget(req.body.userId + ':likes' , contents[i].contentId)
-					.then(function(success) {
-
-						console.log(success);
-						contents[i].isLiked = success;
-					});
-
-
-				redisService.hget(req.body.userId + ':dislikes' , contents[i].contentId)
-					.then(function(success) {
-
-						contents[i].isDisliked = success;
-					});				
-			}
-
-			res.status(config.httpSuccess);
-			res.send(contents);
+	contentService.likeContent(req.body.userId, req.body.contentId)
+		.then(function(success) {
+			return userService.likeContent(req.body.userId, req.body.contentId);
 		}, function(err) {
-			logger.error(filename, 'POST /like:' + err);
-			res.status(config.httpFailure);
+			res.status(httpFailure);
 			res.send(err);
+		})
+
+		.then(function(success) {
+			res.status(httpSuccess);
+			res.send('success');
+		}, function(err) {
+			res.status(httpFailure);
+			res.send('error');
 		});
 });
 
 app.post('/unlike', function(req, res) {
-	likeDislikeService.unlike(req.body.userId, req.body.contentId)
+	contentService.unlikeContent(req.body.userId, req.body.contentId)
 		.then(function(success) {
-			logger.info(filename, 'POST /unlike:' + 'SUCCESS');
-			res.status(config.httpSuccess);
-			res.send(success);
+			return userService.unlikeContent(req.body.userId, req.body.contentId);
 		}, function(err) {
-			logger.error(filename, 'POST /unlike:' + err);
-			res.status(config.httpFailure);
+			res.status(httpFailure);
 			res.send(err);
+		})
+
+		.then(function(success) {
+			res.status(httpSuccess);
+			res.send('success');
+		}, function(err) {
+			res.status(httpFailure);
+			res.send('error');
 		});
 });
 
-app.post('/likeDislike', function(req, res) {
-	likeDislikeService.likeDislike(req.body.userId, req.body.contentId)
-		.then(function(success) {
-			logger.info(filename, 'POST /likeDislike:' + 'SUCCESS');
-			res.status(config.httpSuccess);
-			res.send(success);
-		}, function(err) {
-			logger.info(filename, 'POST /likeDislike:' + err);
-			res.status(config.httpFailure);
-			res.send(err);
-		});
-});
-
-app.post('/dislikeLike', function(req, res) {
-	likeDislikeService.dislikeLike(req.body.userId, req.body.contentId)
-		.then(function(success) {
-			logger.info(filename, 'POST /dislikeLike:' + 'SUCCESS');
-			res.status(config.httpSuccess);
-			res.send(success);
-		}, function(err) {
-			logger.info(filename, 'POST /dislikeLike:' + err);
-			res.status(config.httpFailure);
-			res.send(err);
-		});
-});
-
-app.post('/dislike', function(req, res) {
-	likeDislikeService.dislike(req.body.userId, req.body.contentId)
-		.then(function(success) {
-			logger.info(filename, 'POST /dislike:' + 'SUCCESS');
-			res.status(config.httpSuccess);
-			res.send(success);
-		}, function(err) {
-			logger.error(filename, 'POST /dislike:' + err);
-			res.status(config.httpFailure);
-			res.send(err);
-		});
-});
-
-app.post('/undislike', function(req, res) {
-	likeDislikeService.undislike(req.body.userId, req.body.contentId)
-		.then(function(success) {
-			logger.info(filename, 'POST /undislike:' + 'SUCCESS');
-			res.status(config.httpSuccess);
-			res.send(success);
-		}, function(err) {
-			logger.error(filename, 'POST /undislike:' + err);
-			res.status(config.httpFailure);
-			res.send(err);
-		});
-});
 
 app.post('/bookmark', function(req, res) {
-	bookmarkService.bookmark(req.body.userId, req.body.contentId)
+	contentService.bookmarkContent(req.body.userId, req.body.contentId)
 		.then(function(success) {
-			logger.info(filename, 'POST /bookmark:' + 'SUCCESS');
-			res.status(config.httpSuccess);
-			res.send(success);
+			return userService.bookmarkContent(req.body.userId, req.body.contentId);
 		}, function(err) {
-			logger.error(filename, 'POST /bookmark:' + err);
-			res.status(config.httpFailure);
+			res.status(httpFailure);
 			res.send(err);
+		})
+
+		.then(function(success) {
+			res.status(httpSuccess);
+			res.send('success');
+		}, function(err) {
+			res.status(httpFailure);
+			res.send('error');
 		});
 });
 
 app.post('/unbookmark', function(req, res) {
-	bookmarkService.unbookmark(req.body.userId, req.body.contentId)
+	contentService.unbookmarkContent(req.body.userId, req.body.contentId)
 		.then(function(success) {
-			logger.info(filename, 'POST /unbookmark:' + 'SUCCESS');
-			res.status(config.httpSuccess);
-			res.send(success);
+			return userService.unbookmarkContent(req.body.userId, req.body.contentId);
 		}, function(err) {
-			logger.error(filename, 'POST /unbookmark:' + err);
-			res.status(config.httpFailure);
+			res.status(httpFailure);
 			res.send(err);
-		});
-});
+		})
 
-app.get('/likes', function(req, res) {
-	userDataService.likes(req.query.userId)
-		.then(function(likes) {
-			logger.info(filename, 'GET /likes:' + 'SUCCESS');
-			res.status(config.httpSuccess);
-			res.send({ "likes": likes});
+		.then(function(success) {
+			res.status(httpSuccess);
+			res.send('success');
 		}, function(err) {
-			logger.error(filename, 'GET /likes:' + err);
-			res.status(config.httpFailure);
-			res.send(err);
-		});
-});
-
-app.get('/dislikes', function(req, res) {
-	userDataService.dislikes(req.query.userId)
-		.then(function(dislikes) {
-			logger.info(filename, 'GET /dislikes:' + 'SUCCESS');
-			res.status(config.httpSuccess);
-			res.send(dislikes);
-		}, function(err) {
-			logger.error(filename, 'GET /dislikes:' + err);
-			res.status(config.httpFailure);
-			res.send(err);
-		});
-});
-
-app.get('/bookmarks', function(req, res) {
-	userDataService.bookmarks(req.query.userId)
-		.then(function(bookmarks) {
-			logger.info(filename, 'GET /bookmarks:' + 'SUCCESS');
-			res.status(config.httpSuccess);
-			res.send(dislikes);
-		}, function(err) {
-			logger.error(filename, 'GET /bookmarks:' + err);
-			res.status(config.httpFailure);
-			res.send(err);
-		});
-});
-
-app.get('/userdata', function(req, res) {
-	userDataService.getUserData(req.query.userId)
-		.then(function(userdata) {
-			logger.info(filename, 'GET /userdata:' + 'SUCCESS');
-			res.status(config.httpSuccess);
-			res.send({ "userdata": userdata });
-		}, function(err) {
-			logger.error(filename, 'GET /userdata:' + err);
-			res.status(config.httpFailure);
-			res.send(err);
+			res.status(httpFailure);
+			res.send('error');
 		});
 });
 

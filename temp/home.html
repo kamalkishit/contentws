@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/css/materialize.min.css">
+</head>
+<body>
+<!--<nav>
+   	<div class="nav-wrapper">
+      <ul id="nav-mobile" class="left">
+		<li><a href="#"><i class="material-icons">menu</i></a></li>
+		<li class='hide-on-med-and-down'><a href="#">ContentWS</a></li>
+		<li class='hide-on-med-and-down'><a href="#">Latest</a></li>
+		<li class='hide-on-med-and-down'><a href="#">Most Viewed</a></li>
+		<li class='hide-on-med-and-down'><a href="#">Trending</a></li>
+      </ul>
+      <ul id="nav-mobile" class="right">
+        <li><a href="#"><i class="material-icons">refresh</i></a></li>
+        <li><a href="#"><i class="material-icons">more_vert</i></a></li>
+      </ul>
+    </div>
+</nav> -->
+
+
+	<nav>
+		  	<a href="#" data-activates="slide-out" class="button-collapse show-on-large"><i class="mdi-navigation-menu"></i></a>
+	  	<ul class="left">
+			<li><a href="#">ContentWS</a></li>
+			<li class='hide-on-med-and-down'><a href="#">Latest</a></li>
+			<li class='hide-on-med-and-down'><a href="#">Most Viewed</a></li>
+			<li class='hide-on-med-and-down'><a href="#">Trending</a></li>
+	  	</ul>
+	  	<ul id="slide-out" class="side-nav">
+			<li><a href="#">ContentWS</a></li>
+			<li><a href="#">Latest</a></li>
+			<li><a href="#">Most Viewed</a></li>
+			<li><a href="#">Trending</a></li>
+	  	</ul>
+
+	  	<ul id="nav-mobile" class="right">
+	        <li><a href="#"><i class="material-icons">refresh</i></a></li>
+	        <li><a href="#"><i class="material-icons">more_vert</i></a></li>
+	    </ul>
+
+	</nav>
+
+	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/js/materialize.min.js"></script>    
+
+  	<script>
+  		$(document).ready(function() {
+  			$(".button-collapse").sideNav();
+  		})
+  	</script>    
+</body>
+</html>

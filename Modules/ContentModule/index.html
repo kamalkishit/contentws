@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/css/materialize.min.css">
+</head>
+<body ng-app='ContentModule' ng-controller='contentController'>
+	<!--<div class='navbar-fixed'>
+	 	<nav class='teal lighten-2'>
+		    <div class="nav-wrapper">
+		    	<a href="#">ContentWS</a>
+		    	<a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+		      	<ul class="right">
+			        <li><a href="#"><i class="material-icons">search</i></a></li>
+			        <li><a href="#"><i class="material-icons">refresh</i></a></li>
+			        <li><a href="#"><i class="material-icons">more_vert</i></a></li>
+			    </ul>
+		    </div>
+	  	</nav>
+  	</div> -->
+
+  	<nav class='teal lighten-2'>
+		<a href="#" data-activates="slide-out" class="button-collapse show-on-large"><i class="mdi-navigation-menu"></i></a>
+	  	<ul class="left">
+			<li><a href="#">ContentWS</a></li>
+			<li class='hide-on-med-and-down'><a href="#">Latest</a></li>
+			<li class='hide-on-med-and-down'><a href="#">Most Viewed</a></li>
+			<li class='hide-on-med-and-down'><a href="#">Trending</a></li>
+	  	</ul>
+	  	<ul id="slide-out" class="side-nav">
+			<li><a href="#">ContentWS</a></li>
+			<li><a href="#">Latest</a></li>
+			<li><a href="#">Most Viewed</a></li>
+			<li><a href="#">Trending</a></li>
+	  	</ul>
+
+	  	<ul id="nav-mobile" class="right">
+	        <li><a href="#"><i class="material-icons">refresh</i></a></li>
+	        <li><a href="#"><i class="material-icons">more_vert</i></a></li>
+	    </ul>
+	</nav>
+
+	<div class='container'>
+	  	<div class="row">
+	        <div class="col s12 m10 l8 offset-m1 offset-l2">
+	          	<div class="card hoverable">
+	            	<div class="card-image">
+	              		<img ng-src='{{ items[0].imageURL | trustUrl }}'>
+	              	<span class="card-title">{{ items[0].ogSiteName }}</span>
+		            </div>
+		            <div class="card-content" style='height: 150px'>
+		              	<p>{{ items[0].ogTitle }}</p>
+		              	<hr>
+		              	<p class='truncate'>{{ items[0].ogDescription }}</p>
+		            </div>
+		        </div>
+		    </div>
+	    </div>
+    </div>
+
+    <div class='container'>
+	    <div class='row' infinite-scroll='loadMore()' infinite-scroll-distance='1' layout-wrap>
+	    	<div class='col s12 m6 l6'  ng-repeat='item in items'>
+	          	<div class="card hoverable">
+	            	<div class="card-image">
+	              		<img ng-src='{{ item.imageURL | trustUrl }}'>
+	              	<span class="card-title">{{ item.ogSiteName }}</span>
+		            </div>
+		            <div class="card-content" style='height: 150px'>
+						<p>{{ item.ogTitle }}</p>
+						<hr>
+						<p class='truncate'>{{ item.ogDescription }}</p>
+		            </div>
+		        </div>
+		    </div>
+		</div>
+	</div>
+
+
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js'></script>
+  	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/js/materialize.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-animate.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-aria.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.4/angular-material.js"></script>
+    <script src='angularModule.js'></script>
+    <script src='infinite-scroll.js'></script>
+ 	<script>
+  		$(document).ready(function() {
+  			$(".button-collapse").sideNav();
+  		})
+  	</script>
+</body>
+</html>

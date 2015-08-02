@@ -10,7 +10,9 @@ fs.readFile(config.filenameDestination, function(err, data) {
     if (!err) {
         jsonData = JSON.parse(data);
 		for (var i = 0; i < jsonData.length; i++) {
-			jobQueue.addJob('abc', jsonData[i].url, jsonData[i].category);
+			jobQueue.addJob('abc', 'kamal', jsonData[i].url, jsonData[i].category);
+			//jobQueue.addJob('abc', 'kamal', 'http://thelogicalindian.com/news/azim-premji-gives-half-of-his-stake-in-wipro-for-charity/',
+				//'education');
 		}
 	}
 });

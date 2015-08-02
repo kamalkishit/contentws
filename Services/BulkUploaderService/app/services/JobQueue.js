@@ -10,10 +10,11 @@ var queue = kue.createQueue();
 
 var delay = 0;
 
-exports.addJob = function(jobName, url, category) {
+exports.addJob = function(jobName, userId, url, category) {
 
 	delay += config.jobDelay;
 	var job = queue.create(jobName, {
+		userId: userId,
 		url: url,
 		category: category
 	}).delay(delay);
@@ -35,7 +36,7 @@ exports.processJobs = function(jobName) {
 
 	queue.process(jobName, function(job, done) {
 
-		urlInserterService.insertURL(job.data.url, job.data.category)
+		urlInserterService.insertURL(job.data.userId, job.data.url, job.data.category)
 			.then(function(success) {
 				done();
 			}, function(err) {

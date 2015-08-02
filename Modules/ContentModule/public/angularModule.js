@@ -128,7 +128,7 @@ app.factory('UserDataService', function($http) {
 	};
 
 	userDataService.completed = function() {
-		return isDone;
+		return isDone;x
 	}
 
 	userDataService.isLiked = function(contentId) {
@@ -363,39 +363,41 @@ app.controller('contentController',
 	$scope.limit = 10;
 	$scope.items = [];
 
-	if ($window.sessionStorage.getItem('token') != null) {
+	/*if ($window.sessionStorage.getItem('token') != null) {
 		$scope.isLoggedIn = true;
 		UserDataService.getUserData($window.sessionStorage.getItem('userId'));
 	} else {
 		$scope.isLoggedIn = false;
-	}
+	}*/
 
 	FindService.findAll($scope.startIndex, $scope.limit)
 		.then(function(records) {
 
+			console.log(records)
+			console.log('i m here')
 			var contents = records.data.contents;
 			console.log(contents);
 
-			if ($scope.isLoggedIn) {
+			/*if ($scope.isLoggedIn) {
 				for (var i = 0; i < contents.length; i++) {
 					contents[i].isLiked = UserDataService.isLiked(contents[i].contentId);
 					contents[i].isDisliked = UserDataService.isDisliked(contents[i].contentId);
 					contents[i].isBookmarked = UserDataService.isBookmarked(contents[i].contentId);
 				}
-			}
+			}*/
 			
 			$scope.items = contents;
 			$scope.startIndex += $scope.limit;
 		}, function(err) {
-
+			console.log('error')
 		});
 
 	$scope.findAll = function() {
 
 		FindService.findAll($scope.startIndex, $scope.limit)
 			.then(function(records) {
-
-
+				console.log('i m here')
+				console.log(records.data.contents);
 				$scope.startIndex += $scope.limit;
 			}, function(err) {
 				

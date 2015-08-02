@@ -20,7 +20,6 @@ app.get('/submit', function(req, res) {
 });
 
 app.post('/submit', function(req, res) {
-	
 	if (!req.body.contentURL) {
 		res.status(config.httpFailure);
 		logger.error(filename, 'POST /:' + 'contentURL is missing');
