@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/css/materialize.min.css">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body ng-app='ContentModule' ng-controller='contentController'>
+	<div class='navbar-fixed'>
+	  	<nav class='teal lighten-2'>
+			<a href="#" data-activates="slide-out" class="button-collapse show-on-large"><i class="mdi-navigation-menu"></i></a>
+		  	<ul class="left">
+				<li><a href="#">ContentWS</a></li>
+		  	</ul>
+		  	<ul id="slide-out" class="side-nav">
+				<li><a href="#">ContentWS</a></li>
+				<li><a href="#">Latest</a></li>
+				<li><a href="#">Most Viewed</a></li>
+				<li><a href="#">Trending</a></li>
+		  	</ul>
+
+		  	<ul id="nav-mobile" class="right">
+		        <li><a href="#"><i class="material-icons">refresh</i></a></li>
+		        <li><a href="#"><i class="material-icons">more_vert</i></a></li>
+		    </ul>
+		</nav>
+	</div>
+	<br>
+	<br>
+
+	<div class='container'>
+		<ul class="collapsible" data-collapsible="accordion">
+	    	<li ng-repeat='item in items'>
+	      		<div class="collapsible-header">{{ item.ogTitle }}
+	      		<a ng-href="{{ item.contentURL }}" target="_blank">OPEN</a></div>
+	      		<div class="collapsible-body">
+	      			<p>sdgaseggds</p>
+	      		</div>
+	    	</li>
+	  	</ul>
+	</div>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/js/materialize.min.js"></script>
+  	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.js"></script>
+  	<script src='angularModule.js'></script>
+  	<script src='infinite-scroll.js'></script>
+  	<script>
+  		 $(document).ready(function(){
+    		$('.collapsible').collapsible({
+      			accordion : true // A setting that changes the collapsible behavior to expandable instead of the default accordion style
+    		});
+  		});
+ 	</script>
+</body>
+</html>

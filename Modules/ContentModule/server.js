@@ -32,6 +32,23 @@ app.get('/login', function(req, res) {
 	res.sendFile(__dirname + '/public/login.html');
 });
 
+app.get('/content', function(req, res) {
+	res.sendFile(__dirname + '/contents.html');
+});
+
+app.get('/paper', function(req, res) {
+	res.sendFile(__dirname + '/create_paper.html');
+});
+
+app.post('/paper', function(req, res) {
+	if (!req.body.contentIds) {
+		res.status(config.httpFailure);
+		res.send('error');
+	}
+
+	contentService.createPaper(req.body.contentIds);
+})
+
 app.post('/login', function(req, res) {
 	if (!req.body.emailId) {
 		res.status(config.httpFailure);

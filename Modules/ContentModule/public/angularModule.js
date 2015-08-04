@@ -1,12 +1,4 @@
-var app = angular.module('ContentModule', ['ngMaterial', 'infinite-scroll']);
-
-app.config(function($mdThemingProvider) {
-  $mdThemingProvider.theme('default')
-    .primaryPalette('grey', {
-    	default: '50'
-    })
-    .accentPalette('orange');
-});
+var app = angular.module('ContentModule', ['infinite-scroll']);
 
 app.filter('trustUrl', function($sce) {
 	
@@ -448,4 +440,17 @@ app.controller('contentController',
 	$scope.updateViewCount = function(item) {
 		$http.post('/');
 	}
+});
+
+app.controller('paperController', function($scope, $http) {
+
+	$scope.submit = function() {
+		console.log($scope.contentIds)
+		$http.post('/paper', { contentIds: $scope.contentIds })
+			.then(function(contents) {
+				console.log('success');
+			}, function(err) {
+				console.log('failure');
+			});
+	};
 });

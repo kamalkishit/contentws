@@ -31,6 +31,23 @@ exports.insertContent = function(userId, url, category) {
 	return promise;
 };
 
+exports.createPaper = function(contentIds) {
+	var promise = new Promise(function(resolve, reject) {
+		if (!contentIds) {
+			reject({ error: new Error('contentIds is null') });
+		}
+
+		var contentIdsArray = contentIds.split(',');
+		for (var i = 0; i < contentIdsArray.length; i++) {
+			contentIdsArray[i] = contentIdsArray[i].trim();
+		}
+
+		console.log(contentIdsArray);
+	});
+
+	return promise;
+};
+
 exports.likeContent = function(userId, contentId) {
 	var promise = new Promise(function(resolve, reject) {
 		if (!userId) {
