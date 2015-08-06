@@ -63,14 +63,16 @@ app.post('/login', function(req, res) {
 	}		
 
 	loginService.login(req.body.emailId, req.body.password)
-		.then(function(success) {
+		.then(function(userdata) {
 			logger.info(filename, 'POST /login:' + 'user logged in successfully');
 			res.status(config.httpSuccess);
-			res.send(success);
+			res.send({ 
+				userId: userdata.userId,
+				token: userdata.token });
 		}, function(err) {
 			logger.error(filename, 'POST /login:' + err);
 			res.status(config.httpFailure);
-			res.send(err);
+			res.send({ error: err });
 		});
 });
 
@@ -101,10 +103,10 @@ app.get('/signup', function(req, res) {
 });
 
 app.post('/signup', function(req, res) {
-	if (!req.body.username) {
+	if (!req.body.emailId) {
 		res.status(config.httpFailure);
-		logger.error(filename, 'POST /signup:' + 'username is missing');
-		res.send('username is missing');
+		logger.error(filename, 'POST /signup:' + 'emailId is missing');
+		res.send('emailId is missing');
 	}
 
 	if (!req.body.password) {
@@ -113,15 +115,15 @@ app.post('/signup', function(req, res) {
 		res.send('password is missing');
 	}		
 
-	signupService.signup(req.body.username, req.body.password)
+	signupService.signup(req.body.emailId, req.body.password)
 		.then(function(success) {
 			logger.info(filename, 'POST /signup:' + 'user registered successfully');
 			res.status(config.httpSuccess);
-			res.send(success);
+			res.send({ msg: success });
 		}, function(err) {
 			logger.error(filename, 'POST /signup:' + err);
 			res.status(config.httpFailure);
-			res.send(err);
+			res.send({ error: err });
 		});
 });
 
