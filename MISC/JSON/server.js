@@ -1,4 +1,5 @@
 'use strict'
+
 var fs = require('fs');
 var excelJsonService = require('cws-exceljson-service');
 var config = require('cws-config');

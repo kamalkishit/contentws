@@ -117,7 +117,9 @@ exports.search = function(searchStr) {
 				if (err) {
 					reject({ error: new Error(err) });
 				} else {
-					resolve({ contents: contents });
+					resolve({ success: 'success', 
+						contents: contents 
+					});
 				}
 			});
 	});

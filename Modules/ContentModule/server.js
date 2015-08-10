@@ -1,11 +1,12 @@
+'use strict';
+
 var express = require('express');
 var bodyParser = require('body-parser');
 
 var logger = require('cws-logger');
 var config = require('cws-config');
-var apiService = require('./app/services/APIService');
-//var dbsetupService = require('cws-dbsetup-service');
-var contentService = require('./contentService');
+//var apiService = require('./app/services/APIService');
+var dbsetupService = require('cws-dbsetup-service');
 var databaseService = require('cws-database-service');
 var loginService = require('cws-login-service');
 var signupService = require('cws-signup-service');
@@ -13,6 +14,9 @@ var likeDislikeService = require('cws-likedislike-service');
 var bookmarkService = require('cws-bookmark-service');
 var userDataService = require('cws-userdata-service');
 var Content = require('cws-models').getContentModel();
+
+var contentService = require('./contentService');
+var userService = require('./userService');
 
 var filename = 'server';
 
@@ -28,9 +32,7 @@ app.get('/', function(req, res) {
 	res.sendFile(__dirname + '/index.html');
 });
 
-app.get('/login', function(req, res) {
-	res.sendFile(__dirname + '/public/login.html');
-});
+
 
 app.get('/content', function(req, res) {
 	res.sendFile(__dirname + '/contents.html');
@@ -49,6 +51,10 @@ app.post('/paper', function(req, res) {
 	contentService.createPaper(req.body.contentIds);
 })
 
+app.get('/login', function(req, res) {
+	res.sendFile(__dirname + '/login.html');
+});
+
 app.post('/login', function(req, res) {
 	if (!req.body.emailId) {
 		res.status(config.httpFailure);
@@ -62,13 +68,11 @@ app.post('/login', function(req, res) {
 		res.send('password is missing');
 	}		
 
-	loginService.login(req.body.emailId, req.body.password)
-		.then(function(userdata) {
+	userService.login(req.body.emailId, req.body.password)
+		.then(function(user) {
 			logger.info(filename, 'POST /login:' + 'user logged in successfully');
 			res.status(config.httpSuccess);
-			res.send({ 
-				userId: userdata.userId,
-				token: userdata.token });
+			res.send({ user: user });
 		}, function(err) {
 			logger.error(filename, 'POST /login:' + err);
 			res.status(config.httpFailure);
@@ -99,7 +103,7 @@ app.get('/search', function(req, res) {
 });
 
 app.get('/signup', function(req, res) {
-	res.sendFile(__dirname + '/public/signup.html');
+	res.sendFile(__dirname + '/signup.html');
 });
 
 app.post('/signup', function(req, res) {
@@ -115,11 +119,11 @@ app.post('/signup', function(req, res) {
 		res.send('password is missing');
 	}		
 
-	signupService.signup(req.body.emailId, req.body.password)
+	userService.signup(req.body.emailId, req.body.password)
 		.then(function(success) {
 			logger.info(filename, 'POST /signup:' + 'user registered successfully');
 			res.status(config.httpSuccess);
-			res.send({ msg: success });
+			res.send({ success: success });
 		}, function(err) {
 			logger.error(filename, 'POST /signup:' + err);
 			res.status(config.httpFailure);

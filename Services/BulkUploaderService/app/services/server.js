@@ -1,3 +1,4 @@
+'use strict'
 
 var imageConversion = require('./ImageConversionService.js');
 
@@ -7,4 +8,4 @@ imageConversion.getImageSize('/Users/Kamal/Desktop/E1cjj6S_.jpg')
 		console.log(success);
 	}, function(err) {
 		console.log(err);
-	})
+	});

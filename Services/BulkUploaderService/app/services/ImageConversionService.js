@@ -1,3 +1,5 @@
+'use strict'
+
 var fs = require('fs');
 var gm = require('gm').subClass({ imageMagick: true });
 

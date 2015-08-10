@@ -1,3 +1,5 @@
+'use strict'
+
 var kue = require('kue');
 
 var logger = require('cws-logger');
@@ -11,7 +13,6 @@ var queue = kue.createQueue();
 var delay = 0;
 
 exports.addJob = function(jobName, userId, url, category) {
-
 	delay += config.jobDelay;
 	var job = queue.create(jobName, {
 		userId: userId,
@@ -21,21 +22,17 @@ exports.addJob = function(jobName, userId, url, category) {
 
 	job
 		.on('complete', function() {
-
 			logger.info(filename, 'addJob:' + job.id + ' completed successfully');
 		})
 		.on('failed', function() {
-
 			logger.error(filename, 'addJob:' + job.id + ' failed');
 		});
 
 	job.save();	
-}
+};
 
 exports.processJobs = function(jobName) {
-
 	queue.process(jobName, function(job, done) {
-
 		urlInserterService.insertURL(job.data.userId, job.data.url, job.data.category)
 			.then(function(success) {
 				done();

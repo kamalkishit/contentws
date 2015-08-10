@@ -1,3 +1,5 @@
+'use strict';
+
 var excel = require('excel');
 
 var logger = require('cws-Logger');
@@ -30,7 +32,7 @@ function convertToJSON(array) {
 	}
 
   	var firstRow = array[0].join();
-  	var headers = firstRow.split(',');
+  	var headers = fßirstRow.split(',');
 
   	var jsonData = [];
   	for ( var i = 1; i < array.length; i++ ) {

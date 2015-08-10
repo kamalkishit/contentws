@@ -1,3 +1,5 @@
+'use strict'
+
 var dbSetupService = require('cws-dbsetup-service');
 
 var jobQueue = require('./BulkUploaderService/app/services/JobQueue');
