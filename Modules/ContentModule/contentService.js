@@ -20,7 +20,7 @@ exports.insertContent = function(userId, url, category) {
 			reject({ error: new Error('category is null' )});
 		}
 
-		urlInserterService.insertURL(contentOwnerId, url, category)
+		urlInserterService.insertURL(userId, url, category)
 			.then(function(success) {
 				console.log('insert success');
 			}, function(err) {
@@ -47,6 +47,10 @@ exports.createPaper = function(contentIds) {
 
 	return promise;
 };
+
+exports.getPaper = function() {
+	return databaseService.find(ContentModel);
+}
 
 exports.likeContent = function(userId, contentId) {
 	var promise = new Promise(function(resolve, reject) {

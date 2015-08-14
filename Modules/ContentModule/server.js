@@ -39,7 +39,14 @@ app.get('/content', function(req, res) {
 });
 
 app.get('/paper', function(req, res) {
-	res.sendFile(__dirname + '/create_paper.html');
+	contentService.getPaper()
+		.then(function(success) {
+			res.status(config.httpSuccess);
+			res.send({ "contents": success });
+		}, function(err) {
+			res.status(config.httpFailure);
+			res.send({ "error": err });
+		});
 });
 
 app.post('/paper', function(req, res) {
@@ -149,7 +156,7 @@ app.post('/submit', function(req, res) {
 		res.send('category is missing');
 	}		
 
-	contentService.insertContent(req.body.contentOwnerId, req.body.contentURL, req.body.category)
+	contentService.insertContent("kamal", req.body.contentURL, req.body.category)
 		.then(function(success) {
 			res.status(config.httpSuccess);
 			res.json({ success: true });
