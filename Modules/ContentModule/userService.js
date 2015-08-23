@@ -4,6 +4,7 @@ var databaseService = require('cws-database-service');
 var uniqueIdGenerator = require('cws-unique-id-generator');
 var models = require('cws-models');
 var User = models.getUserModel();
+var Content = models.getContentModel();
 
 var jsonWebToken = require('jsonwebtoken');
 
@@ -92,11 +93,11 @@ exports.likeContent = function(userId, contentId) {
 		var searchQuery = { userId: userId, likes: { $ne: contentId }};
 		var updateQuery = { $push: { likes: contentId }};
 
-		ContentModel.update(searchQuery, updateQuery, function(err, content) {
+		User.update(searchQuery, updateQuery, function(err, content) {
 			if (err) {
-				reject(err);
+				reject({ error: err });
 			} else {
-				resolve(content);
+				resolve({ success: content });
 			}
 		});
 	});
@@ -117,11 +118,11 @@ exports.unlikeContent = function(userId, contentId) {
 		var searchQuery = { userId: userId, likes: contentId };
 		var updateQuery = { $pull: { likes: contentId }};
 
-		ContentModel.update(searchQuery, updateQuery, function(err, content) {
+		User.update(searchQuery, updateQuery, function(err, content) {
 			if (err) {
-				reject(err);
+				reject({ error: err });
 			} else {
-				resolve(content);
+				resolve({ success: content });
 			}
 		});
 	});
@@ -142,7 +143,7 @@ exports.bookmarkContent = function(userId, contentId) {
 		var searchQuery = { userId: userId, bookmarks: { $ne: contentId }};
 		var updateQuery = { $push: { bookmarks: contentId }};
 
-		ContentModel.update(searchQuery, updateQuery, function(err, content) {
+		User.update(searchQuery, updateQuery, function(err, content) {
 			if (err) {
 				reject(err);
 			} else {
@@ -167,7 +168,7 @@ exports.unbookmarkContent = function(userId, contentId) {
 		var searchQuery = { userId: userId, bookmarks: contentId };
 		var updateQuery = { $pull: { bookmarks: contentId }};
 
-		ContentModel.update(searchQuery, updateQuery, function(err, content) {
+		User.update(searchQuery, updateQuery, function(err, content) {
 			if (err) {
 				reject(err);
 			} else {
@@ -191,6 +192,7 @@ var login = function(email, password) {
 
 		databaseService.findOne(User, { 'emailId': emailId })
 			.then(function(user) {
+				console.log('i m here')
 				if (user.password == password) {
 					var token = jsonWebToken.sign(user, config.secretKey);
 					resolve({ success: 'user ' + email + ' validated successfully',
@@ -199,6 +201,7 @@ var login = function(email, password) {
 					reject({ error: new Error('password is invalid') });
 				}
 			}, function(err) {
+				console.log('or here')
 				reject({ error: new Error(err) });
 			});
 	});

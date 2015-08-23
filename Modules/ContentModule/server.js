@@ -76,11 +76,13 @@ app.post('/login', function(req, res) {
 	}		
 
 	userService.login(req.body.emailId, req.body.password)
-		.then(function(user) {
+		.then(function(success) {
+			console.log(success)
 			logger.info(filename, 'POST /login:' + 'user logged in successfully');
 			res.status(config.httpSuccess);
-			res.send({ user: user });
+			res.send({ success: success });
 		}, function(err) {
+			console.log(err);
 			logger.error(filename, 'POST /login:' + err);
 			res.status(config.httpFailure);
 			res.send({ error: err });
@@ -185,102 +187,67 @@ app.get('/contents', function(req, res) {
 			console.log(err)
 			res.status(config.httpFailure);
 			res.send(err);
-		})
-	/*if (req.query.lastCreatedDate) {
-		console.log(req.query.lastCreatedDate)
-		apiService.findLastCreated(req.query.lastCreatedDate, req.query.startIndex, req.query.limit)
-			.then(function(results) {
-				res.status(config.httpSuccess);
-				res.send({ "contents": results });
-			}, function(err) {
-				res.status(config.httpFailure);
-				res.send(err);
-			})
-	} else {
-		apiService.find(req.query.startIndex, req.query.limit)
-			.then(function(results) {
-				logger.info(filename, 'GET /contents:' + 'SUCCESS');
-				res.status(config.httpSuccess);
-				console.log(config.CONTENTS);
-				res.send({ "contents": results });
-			}, function(err) {
-				logger.error(filename, 'GET /contents:' + err);
-				res.status(config.httpFailure);
-				res.send(err);
-			});
-	}*/
+		});
+});
+
+app.get('/refreshcontents', function(req, res) {
+	contentService.getContents(req.query.firstCreateDate)
+		.then(function(contents) {
+			res.status(config.httpSuccess);
+			res.send({ "contents": contents });
+		}, function(err) {
+			console.log(err)
+			res.status(config.httpFailure);
+			res.send(err);
+		});		
 });
 
 app.post('/like', function(req, res) {
-	contentService.likeContent(req.body.userId, req.body.contentId)
+	userService.likeContent(req.body.userId, req.body.contentId)
 		.then(function(success) {
-			return userService.likeContent(req.body.userId, req.body.contentId);
+			// code is written assuming even if contentService.likeContent fails, success is returned
+			contentService.likeContent(req.body.userId, req.body.contentId);
+			res.status(config.httpSuccess);
+			res.send(success);
 		}, function(err) {
-			res.status(httpFailure);
+			console.log(err);
+			res.status(config.httpFailure);
 			res.send(err);
-		})
-
-		.then(function(success) {
-			res.status(httpSuccess);
-			res.send('success');
-		}, function(err) {
-			res.status(httpFailure);
-			res.send('error');
 		});
 });
 
 app.post('/unlike', function(req, res) {
-	contentService.unlikeContent(req.body.userId, req.body.contentId)
+	userService.unlikeContent(req.body.userId, req.body.contentId)
 		.then(function(success) {
-			return userService.unlikeContent(req.body.userId, req.body.contentId);
+			// code is written assuming even if contentService.unlikeContent fails, success is returned
+			contentService.unlikeContent(req.body.userId, req.body.contentId);
+			res.status(config.httpSuccess);
+			res.send(success);
 		}, function(err) {
-			res.status(httpFailure);
+			res.status(config.httpFailure);
 			res.send(err);
-		})
-
-		.then(function(success) {
-			res.status(httpSuccess);
-			res.send('success');
-		}, function(err) {
-			res.status(httpFailure);
-			res.send('error');
 		});
 });
 
-
 app.post('/bookmark', function(req, res) {
-	contentService.bookmarkContent(req.body.userId, req.body.contentId)
+	userService.bookmarkContent(req.body.userId, req.body.contentId)
 		.then(function(success) {
-			return userService.bookmarkContent(req.body.userId, req.body.contentId);
+			res.status(config.httpSuccess);
+			res.send(success);
 		}, function(err) {
-			res.status(httpFailure);
+			res.status(config.httpFailure);
 			res.send(err);
-		})
-
-		.then(function(success) {
-			res.status(httpSuccess);
-			res.send('success');
-		}, function(err) {
-			res.status(httpFailure);
-			res.send('error');
 		});
 });
 
 app.post('/unbookmark', function(req, res) {
-	contentService.unbookmarkContent(req.body.userId, req.body.contentId)
+	userService.unbookmarkContent(req.body.userId, req.body.contentId)
 		.then(function(success) {
-			return userService.unbookmarkContent(req.body.userId, req.body.contentId);
+			res.status(config.httpSuccess);
+			res.send(success);
 		}, function(err) {
-			res.status(httpFailure);
+			res.status(config.httpFailure);
 			res.send(err);
-		})
-
-		.then(function(success) {
-			res.status(httpSuccess);
-			res.send('success');
-		}, function(err) {
-			res.status(httpFailure);
-			res.send('error');
 		});
 });
 

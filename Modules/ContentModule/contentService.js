@@ -52,6 +52,27 @@ exports.getPaper = function() {
 	return databaseService.find(ContentModel);
 }
 
+exports.incrementViewCount = function(contentId) {
+	var promise = new Promise(function(resolve, reject) {
+		if (!contentId) {
+			reject({ error: new Error('contentId is null') });
+		}
+
+		var searchQuery = { contentId: contentId };
+		var updateQuery = { $inc: { viewCount: 1 }};
+
+		ContentModel.update(searchQuery, updateQuery, function(err, content) {
+			if (err) {
+				reject({ error : err });
+			} else {
+				resolve({ success: content });
+			}
+		});
+	});
+
+	return promise;
+}
+
 exports.likeContent = function(userId, contentId) {
 	var promise = new Promise(function(resolve, reject) {
 		if (!userId) {
@@ -62,14 +83,14 @@ exports.likeContent = function(userId, contentId) {
 			reject({ error: new Error('contentId is null') });
 		}
 
-		var searchQuery = { contentId: contentId, likes: { $ne: userId }};
-		var updateQuery = { $inc: { likesCount: 1 }, $push: { likes: userId }};
+		var searchQuery = { contentId: contentId };
+		var updateQuery = { $inc: { likesCount: 1 }};
 
 		ContentModel.update(searchQuery, updateQuery, function(err, content) {
 			if (err) {
-				reject(err);
+				reject({ error : err });
 			} else {
-				resolve(content);
+				resolve({ success: content });
 			}
 		});
 	});
@@ -87,14 +108,14 @@ exports.unlikeContent = function(userId, contentId) {
 			reject({ error: new Error('contentId is null') });
 		}
 
-		var searchQuery = { contentId: contentId, likes: userId };
-		var updateQuery = { $inc: { likesCount: -1 }, $pull: { likes: userId }};
+		var searchQuery = { contentId: contentId };
+		var updateQuery = { $inc: { likesCount: -1 }};
 
 		ContentModel.update(searchQuery, updateQuery, function(err, content) {
 			if (err) {
-				reject(err);
+				reject({ error: err });
 			} else {
-				resolve(content);
+				resolve({ success: content });
 			}
 		});
 	});
@@ -106,9 +127,13 @@ exports.getContents = function(lastCreatedDate) {
 	if (!lastCreatedDate) {
 		return databaseService.find(ContentModel);
 	} else {
-		return databaseService.findLastCreated(ContentModel, lastCreatedDate);
+		return databaseService.findAfterCreated(ContentModel, lastCreatedDate);
 	}
 };
+
+exports.refreshContents = function(startCreatedDate) {
+	return databaseService.findBeforeCreated(ContentModel, startCreatedDate);
+}
 
 exports.search = function(searchStr) {
 	var promise = new Promise(function(resolve, reject) {
