@@ -152,6 +152,8 @@ app.post('/submit', function(req, res) {
 		res.send('contentURL is missing');
 	}
 
+	console.log(req.body.contentURL);
+
 	if (!req.body.category) {
 		res.status(config.httpFailure);
 		logger.error(filename, 'POST /:' + 'category is missing');
